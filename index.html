@@ -1125,9 +1125,8 @@
    <!--  </div> -->
     <!-- end pricing-main -->
 
-
-
-  <div id="order" class="reservations-main pad-top-100 pad-bottom-100">
+  
+    <div id="order" class="reservations-main pad-top-100 pad-bottom-100">
   <div class="container">
     <div class="row">
       <div class="form-reservations-box">
@@ -1205,10 +1204,13 @@
 
             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
               <div class="reserve-book-btn text-center">
-                <button class="hvr-underline-from-center" type="submit" id="submit">Order on WhatsApp</button>
+                <button class="whatsapp-btn" type="submit" id="submit">
+                  <i class="fa fa-whatsapp"></i> Order on WhatsApp
+                </button>
               </div>
             </div>
           </form>
+
         </div>
       </div>
     </div>
@@ -1218,21 +1220,48 @@
 <script>
 function sendToWhatsApp(event) {
   event.preventDefault();
-  const name = document.getElementById('form_name').value;
-  const phone = document.getElementById('phone').value;
+
+  const name = document.getElementById('form_name').value.trim();
+  const phone = document.getElementById('phone').value.trim();
   const product = document.getElementById('product').value;
   const quantity = document.getElementById('quantity').value;
 
   const message = `Hello! 👋 I’d like to order:\n\n🧾 *${product}*\n📦 Quantity: ${quantity}\n👤 Name: ${name}\n📞 Contact: ${phone}\n\nFrom Mana Ammamma Ruchulu.`;
 
-  // Replace YOURNUMBER with your WhatsApp number in international format (e.g. 919876543210)
-  const whatsappURL = `https://wa.me/919700935578?text=${encodeURIComponent(message)}`;
-  window.open(whatsappURL, '_blank');
+  const yourNumber = "919700935578"; // your WhatsApp number with country code
+  const whatsappURL = `https://wa.me/${yourNumber}?text=${encodeURIComponent(message)}`;
+
+  // Open WhatsApp (desktop or mobile)
+  window.open(whatsappURL, "_blank");
+
+  // Also send email to your inbox
+  const emailSubject = `New Order from ${name}`;
+  const emailBody = `Name: ${name}%0APhone: ${phone}%0AProduct: ${product}%0AQuantity: ${quantity}`;
+  window.location.href = `mailto:manaammammaruchulu@gmail.com?subject=${encodeURIComponent(emailSubject)}&body=${emailBody}`;
 }
 </script>
 
+<style>
+.whatsapp-btn {
+  background-color: #25D366;
+  border: none;
+  color: white;
+  padding: 12px 30px;
+  font-size: 18px;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: 0.3s;
+}
+.whatsapp-btn:hover {
+  background-color: #1DA851;
+}
+.whatsapp-btn i {
+  margin-right: 8px;
+}
+</style>
 
 
+    
     <!-- end reservations-main -->
 
     <div id="footer" class="footer-main">
