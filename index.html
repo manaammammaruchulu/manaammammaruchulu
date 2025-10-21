@@ -1160,7 +1160,7 @@
 
             <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
               <div class="form-box">
-                <select name="product" id="product" class="selectpicker" required>
+                <select name="product" id="product" class="selectpicker" required onchange="updatePrice()">
                   <option selected disabled>Select Product</option>
 
                   <optgroup label="Chicken Pickle">
@@ -1201,7 +1201,7 @@
 
             <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
               <div class="form-box">
-                <select name="quantity" id="quantity" class="selectpicker" required>
+                <select name="quantity" id="quantity" class="selectpicker" required onchange="updatePrice()">
                   <option selected disabled>Select Quantity</option>
                   <option value="250">250 gms</option>
                   <option value="500">500 gms</option>
@@ -1212,6 +1212,7 @@
             </div>
 
             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+              <p id="total-price" style="font-weight:bold; font-size:18px; text-align:center; margin-bottom:15px;">Total Price: ₹0</p>
               <div class="reserve-book-btn text-center">
                 <button class="whatsapp-btn" type="submit">
                   <i class="fa fa-whatsapp"></i> Order on WhatsApp
@@ -1266,6 +1267,15 @@ const priceMap = {
   "Garlic Karam Podi": 349
 };
 
+// Update price dynamically
+function updatePrice() {
+  const product = document.getElementById('product').value;
+  const quantity = parseInt(document.getElementById('quantity').value) || 0;
+  const basePrice = priceMap[product] || 0;
+  const totalPrice = (quantity / 250) * basePrice;
+  document.getElementById('total-price').innerText = `Total Price: ₹${totalPrice}`;
+}
+
 function sendToWhatsAppAndEmail(event) {
   event.preventDefault();
 
@@ -1274,18 +1284,17 @@ function sendToWhatsAppAndEmail(event) {
   const phone = document.getElementById('phone').value;
   const product = document.getElementById('product').value;
   const quantity = parseInt(document.getElementById('quantity').value);
-
   const basePrice = priceMap[product] || 0;
   const totalPrice = (quantity / 250) * basePrice;
 
-  // WhatsApp message
   const message = `Hello! 👋 I’d like to order:\n\n🧾 *${product}*\n📦 Quantity: ${quantity} gms\n💰 Total: ₹${totalPrice}\n👤 Name: ${name}\n📞 Contact: ${phone}\n📧 Email: ${email}\n\nFrom Mana Ammamma Ruchulu.`;
 
+  // WhatsApp
   const yourNumber = "919700935578";
   const whatsappURL = `whatsapp://send?phone=${yourNumber}&text=${encodeURIComponent(message)}`;
   window.location.href = whatsappURL;
 
-  // EmailJS send
+  // EmailJS
   emailjs.send("service_25u05y5", "template_9wy0hii", {
     name: name,
     email: email,
@@ -1293,12 +1302,10 @@ function sendToWhatsAppAndEmail(event) {
     quantity: quantity,
     totalPrice: totalPrice,
     message: message
-  }).then(function(response) {
-    console.log("Email sent!", response.status, response.text);
-  }, function(error) {
-    console.error("Email failed", error);
-  });
+  }).then(() => console.log("Email sent!"))
+    .catch(err => console.error("Email error", err));
 
+  // Show popup centered
   showPopup();
 }
 
@@ -1309,8 +1316,55 @@ function showPopup() {
 function closePopup() {
   document.getElementById('popup').style.display = 'none';
   document.getElementById('order-form').reset();
+  document.getElementById('total-price').innerText = `Total Price: ₹0`;
 }
 </script>
+
+<style>
+.whatsapp-btn {
+  background-color: #25D366;
+  border: none;
+  color: white;
+  padding: 12px 30px;
+  font-size: 18px;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: 0.3s;
+}
+.whatsapp-btn:hover { background-color: #1DA851; }
+.whatsapp-btn i { margin-right: 8px; }
+
+/* Popup Styles */
+.popup-overlay {
+  display: none;
+  position: fixed;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  background: rgba(0,0,0,0.6);
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+}
+.popup-content {
+  background: #fff;
+  padding: 30px 40px;
+  border-radius: 10px;
+  text-align: center;
+  animation: popup 0.4s ease;
+}
+.popup-content h3 { color: #25D366; margin-bottom: 10px; }
+.popup-content p { margin-bottom: 15px; font-size: 16px; }
+.popup-content button {
+  background: #25D366; color: white; border: none;
+  padding: 10px 25px; border-radius: 5px; cursor: pointer;
+  font-weight: bold;
+}
+.popup-content button:hover { background: #1DA851; }
+@keyframes popup {
+  from { transform: scale(0.8); opacity: 0; }
+  to { transform: scale(1); opacity: 1; }
+}
+</style>
 
 
 
