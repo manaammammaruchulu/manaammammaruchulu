@@ -1139,66 +1139,66 @@
           <p>Please fill out all required * fields. Thanks!</p>
 
           <form id="order-form" class="reservations-box" onsubmit="sendToWhatsAppAndEmail(event)">
-            <!-- Name -->
+            
             <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
               <div class="form-box">
                 <input type="text" name="form_name" id="form_name" placeholder="Name" required>
               </div>
             </div>
 
-            <!-- Email -->
             <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
               <div class="form-box">
-                <input type="email" name="email" id="email" placeholder="E-Mail ID" required>
+                <input type="email" name="email" id="email" placeholder="Email" required>
               </div>
             </div>
 
-            <!-- Phone -->
             <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
               <div class="form-box">
                 <input type="text" name="phone" id="phone" placeholder="Contact No." required>
               </div>
             </div>
 
-            <!-- Product -->
             <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
               <div class="form-box">
                 <select name="product" id="product" class="selectpicker" required>
                   <option selected disabled>Select Product</option>
+
                   <optgroup label="Chicken Pickle">
-                    <option value="Chicken Bone Pickle">Chicken Bone Pickle - ₹299</option>
-                    <option value="Boneless Chicken Pickle">Boneless Chicken Pickle - ₹349</option>
-                    <option value="Tokku Chicken Pickle">Tokku Chicken Pickle - ₹449</option>
-                    <option value="Gongura Chicken Pickle">Gongura Chicken Pickle - ₹399</option>
-                    <option value="Mango Chicken Pickle">Mango Chicken Pickle - ₹499</option>
-                    <option value="Natukodi Pickle">Natukodi Pickle - ₹549</option>
+                    <option value="Chicken Bone Pickle">Chicken Bone Pickle</option>
+                    <option value="Boneless Chicken Pickle">Boneless Chicken Pickle</option>
+                    <option value="Tokku Chicken Pickle">Tokku Chicken Pickle</option>
+                    <option value="Gongura Chicken Pickle">Gongura Chicken Pickle</option>
+                    <option value="Mango Chicken Pickle">Mango Chicken Pickle</option>
+                    <option value="Natukodi Pickle">Natukodi Pickle</option>
                   </optgroup>
+
                   <optgroup label="Mutton Pickle">
-                    <option value="Mutton Bone Pickle">Mutton Bone Pickle - ₹474</option>
-                    <option value="Mutton Tokku Pickle">Mutton Tokku Pickle - ₹575</option>
-                    <option value="Mutton Boneless Pickle">Mutton Boneless Pickle - ₹524</option>
-                    <option value="Mutton Gongura Pickle">Mutton Gongura Pickle - ₹499</option>
+                    <option value="Mutton Bone Pickle">Mutton Bone Pickle</option>
+                    <option value="Mutton Tokku Pickle">Mutton Tokku Pickle</option>
+                    <option value="Mutton Boneless Pickle">Mutton Boneless Pickle</option>
+                    <option value="Mutton Gongura Pickle">Mutton Gongura Pickle</option>
                   </optgroup>
+
                   <optgroup label="Seafood Pickle">
-                    <option value="Fish Pickle">Fish Pickle - ₹299</option>
-                    <option value="Koramenu Fish Pickle">Koramenu Fish Pickle - ₹399</option>
-                    <option value="Prawns Pickle">Prawns Pickle - ₹449</option>
-                    <option value="Gongura Prawn Pickle">Gongura Prawn Pickle - ₹499</option>
-                    <option value="Mango Prawn Pickle">Mango Prawn Pickle - ₹549</option>
+                    <option value="Fish Pickle">Fish Pickle</option>
+                    <option value="Koramenu Fish Pickle">Koramenu Fish Pickle</option>
+                    <option value="Prawns Pickle">Prawns Pickle</option>
+                    <option value="Gongura Prawn Pickle">Gongura Prawn Pickle</option>
+                    <option value="Mango Prawn Pickle">Mango Prawn Pickle</option>
                   </optgroup>
+
                   <optgroup label="Podi / Powders">
-                    <option value="Kandi Podi">Kandi Podi - ₹224</option>
-                    <option value="Munagaku Podi">Munagaku Podi - ₹249</option>
-                    <option value="Karam Podi">Karam Podi - ₹249</option>
-                    <option value="Chilli Powder">Chilli Powder - ₹249</option>
-                    <option value="Karivepaku Podi">Karivepaku Podi - ₹249</option>
-                    <option value="Garlic Karam Podi">Garlic Karam Podi - ₹349</option>
+                    <option value="Kandi Podi">Kandi Podi</option>
+                    <option value="Munagaku Podi">Munagaku Podi</option>
+                    <option value="Karam Podi">Karam Podi</option>
+                    <option value="Chilli Powder">Chilli Powder</option>
+                    <option value="Karivepaku Podi">Karivepaku Podi</option>
+                    <option value="Garlic Karam Podi">Garlic Karam Podi</option>
                   </optgroup>
                 </select>
               </div>
             </div>
 
-            <!-- Quantity -->
             <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
               <div class="form-box">
                 <select name="quantity" id="quantity" class="selectpicker" required>
@@ -1211,15 +1211,15 @@
               </div>
             </div>
 
-            <!-- Submit -->
             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
               <div class="reserve-book-btn text-center">
-                <button class="whatsapp-btn" type="submit" id="submit">
+                <button class="whatsapp-btn" type="submit">
                   <i class="fa fa-whatsapp"></i> Order on WhatsApp
                 </button>
               </div>
             </div>
           </form>
+
         </div>
       </div>
     </div>
@@ -1236,15 +1236,12 @@
   </div>
 </div>
 
-<!-- EmailJS SDK -->
-<script src="https://cdn.emailjs.com/dist/email.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/emailjs-com@3/dist/email.min.js"></script>
 <script>
 (function() {
-    emailjs.init("LPKZRX7B1It83cffY"); // Your Public Key
+    emailjs.init("LPKZRX7B1It83cffY"); // Public Key
 })();
-</script>
 
-<script>
 const priceMap = {
   "Chicken Bone Pickle": 299,
   "Boneless Chicken Pickle": 349,
@@ -1288,21 +1285,20 @@ function sendToWhatsAppAndEmail(event) {
   const whatsappURL = `whatsapp://send?phone=${yourNumber}&text=${encodeURIComponent(message)}`;
   window.location.href = whatsappURL;
 
-  // Send Email via EmailJS
+  // EmailJS send
   emailjs.send("service_25u05y5", "template_9wy0hii", {
-      name: name,
-      email: email,
-      product: product,
-      quantity: quantity,
-      totalPrice: totalPrice,
-      message: message
+    name: name,
+    email: email,
+    product: product,
+    quantity: quantity,
+    totalPrice: totalPrice,
+    message: message
   }).then(function(response) {
-      console.log("Email sent successfully!", response.status, response.text);
+    console.log("Email sent!", response.status, response.text);
   }, function(error) {
-      console.error("Email failed:", error);
+    console.error("Email failed", error);
   });
 
-  // Show popup
   showPopup();
 }
 
@@ -1315,52 +1311,6 @@ function closePopup() {
   document.getElementById('order-form').reset();
 }
 </script>
-
-<style>
-.whatsapp-btn {
-  background-color: #25D366;
-  border: none;
-  color: white;
-  padding: 12px 30px;
-  font-size: 18px;
-  border-radius: 5px;
-  cursor: pointer;
-  transition: 0.3s;
-}
-.whatsapp-btn:hover { background-color: #1DA851; }
-.whatsapp-btn i { margin-right: 8px; }
-
-.popup-overlay {
-  display: none;
-  position: fixed;
-  top: 0; left: 0;
-  width: 100%; height: 100%;
-  background: rgba(0,0,0,0.6);
-  justify-content: center;
-  align-items: center;
-  z-index: 9999;
-}
-.popup-content {
-  background: #fff;
-  padding: 30px 40px;
-  border-radius: 10px;
-  text-align: center;
-  animation: popup 0.4s ease;
-}
-.popup-content h3 { color: #25D366; margin-bottom: 10px; }
-.popup-content p { margin-bottom: 15px; font-size: 16px; }
-.popup-content button {
-  background: #25D366;
-  color: white;
-  border: none;
-  padding: 10px 25px;
-  border-radius: 5px;
-  cursor: pointer;
-  font-weight: bold;
-}
-.popup-content button:hover { background: #1DA851; }
-@keyframes popup { from { transform: scale(0.8); opacity: 0; } to { transform: scale(1); opacity: 1; } }
-</style>
 
 
 
