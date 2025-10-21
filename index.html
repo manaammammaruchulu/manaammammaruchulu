@@ -1156,36 +1156,36 @@
                 <select name="product" id="product" class="selectpicker" required>
                   <option selected disabled>Select Product</option>
                   <optgroup label="Chicken Pickle">
-                    <option>Chicken Bone Pickle - ₹299</option>
-                    <option>Boneless Chicken Pickle - ₹349</option>
-                    <option>Tokku Chicken Pickle - ₹449</option>
-                    <option>Gongura Chicken Pickle - ₹399</option>
-                    <option>Mango Chicken Pickle - ₹499</option>
-                    <option>Natukodi Pickle - ₹549</option>
+                    <option value="Chicken Bone Pickle">Chicken Bone Pickle - ₹299</option>
+                    <option value="Boneless Chicken Pickle">Boneless Chicken Pickle - ₹349</option>
+                    <option value="Tokku Chicken Pickle">Tokku Chicken Pickle - ₹449</option>
+                    <option value="Gongura Chicken Pickle">Gongura Chicken Pickle - ₹399</option>
+                    <option value="Mango Chicken Pickle">Mango Chicken Pickle - ₹499</option>
+                    <option value="Natukodi Pickle">Natukodi Pickle - ₹549</option>
                   </optgroup>
 
                   <optgroup label="Mutton Pickle">
-                    <option>Mutton Bone Pickle - ₹474</option>
-                    <option>Mutton Tokku Pickle - ₹575</option>
-                    <option>Mutton Boneless Pickle - ₹524</option>
-                    <option>Mutton Gongura Pickle - ₹499</option>
+                    <option value="Mutton Bone Pickle">Mutton Bone Pickle - ₹474</option>
+                    <option value="Mutton Tokku Pickle">Mutton Tokku Pickle - ₹575</option>
+                    <option value="Mutton Boneless Pickle">Mutton Boneless Pickle - ₹524</option>
+                    <option value="Mutton Gongura Pickle">Mutton Gongura Pickle - ₹499</option>
                   </optgroup>
 
                   <optgroup label="Seafood Pickle">
-                    <option>Fish Pickle - ₹299</option>
-                    <option>Koramenu Fish Pickle - ₹399</option>
-                    <option>Prawns Pickle - ₹449</option>
-                    <option>Gongura Prawn Pickle - ₹499</option>
-                    <option>Mango Prawn Pickle - ₹549</option>
+                    <option value="Fish Pickle">Fish Pickle - ₹299</option>
+                    <option value="Koramenu Fish Pickle">Koramenu Fish Pickle - ₹399</option>
+                    <option value="Prawns Pickle">Prawns Pickle - ₹449</option>
+                    <option value="Gongura Prawn Pickle">Gongura Prawn Pickle - ₹499</option>
+                    <option value="Mango Prawn Pickle">Mango Prawn Pickle - ₹549</option>
                   </optgroup>
 
                   <optgroup label="Podi / Powders">
-                    <option>Kandi Podi - ₹224</option>
-                    <option>Munagaku Podi - ₹249</option>
-                    <option>Karam Podi - ₹249</option>
-                    <option>Chilli Powder - ₹249</option>
-                    <option>Karivepaku Podi - ₹249</option>
-                    <option>Garlic Karam Podi - ₹349</option>
+                    <option value="Kandi Podi">Kandi Podi - ₹224</option>
+                    <option value="Munagaku Podi">Munagaku Podi - ₹249</option>
+                    <option value="Karam Podi">Karam Podi - ₹249</option>
+                    <option value="Chilli Powder">Chilli Powder - ₹249</option>
+                    <option value="Karivepaku Podi">Karivepaku Podi - ₹249</option>
+                    <option value="Garlic Karam Podi">Garlic Karam Podi - ₹349</option>
                   </optgroup>
                 </select>
               </div>
@@ -1229,6 +1229,33 @@
 </div>
 
 <script>
+const priceMap = {
+  "Chicken Bone Pickle": 299,
+  "Boneless Chicken Pickle": 349,
+  "Tokku Chicken Pickle": 449,
+  "Gongura Chicken Pickle": 399,
+  "Mango Chicken Pickle": 499,
+  "Natukodi Pickle": 549,
+
+  "Mutton Bone Pickle": 474,
+  "Mutton Tokku Pickle": 575,
+  "Mutton Boneless Pickle": 524,
+  "Mutton Gongura Pickle": 499,
+
+  "Fish Pickle": 299,
+  "Koramenu Fish Pickle": 399,
+  "Prawns Pickle": 449,
+  "Gongura Prawn Pickle": 499,
+  "Mango Prawn Pickle": 549,
+
+  "Kandi Podi": 224,
+  "Munagaku Podi": 249,
+  "Karam Podi": 249,
+  "Chilli Powder": 249,
+  "Karivepaku Podi": 249,
+  "Garlic Karam Podi": 349
+};
+
 function sendToWhatsApp(event) {
   event.preventDefault();
 
@@ -1237,30 +1264,24 @@ function sendToWhatsApp(event) {
   const product = document.getElementById('product').value;
   const quantity = parseInt(document.getElementById('quantity').value);
 
-  // Extract price from selected product text
-  const priceMatch = product.match(/₹(\d+)/);
-  const basePrice = priceMatch ? parseInt(priceMatch[1]) : 0;
-
-  // Calculate price per 250g
+  const basePrice = priceMap[product] || 0;
   const totalPrice = (quantity / 250) * basePrice;
 
   const message = `Hello! 👋 I’d like to order:\n\n🧾 *${product}*\n📦 Quantity: ${quantity} gms\n💰 Total: ₹${totalPrice}\n👤 Name: ${name}\n📞 Contact: ${phone}\n\nFrom Mana Ammamma Ruchulu.`;
 
   const yourNumber = "919700935578";
-
-  // Try mobile app first; fallback to web
   const mobileURL = `whatsapp://send?phone=${yourNumber}&text=${encodeURIComponent(message)}`;
   const webURL = `https://wa.me/${yourNumber}?text=${encodeURIComponent(message)}`;
+
   window.location.href = mobileURL;
   setTimeout(() => window.open(webURL, '_blank'), 1000);
 
-  // Submit form to send mail to your side
+  // Send email backend
   fetch('mail.php', {
     method: 'POST',
     body: new FormData(document.getElementById('order-form'))
   });
 
-  // Show popup confirmation
   showPopup();
 }
 
