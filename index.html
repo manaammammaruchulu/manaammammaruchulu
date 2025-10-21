@@ -1138,19 +1138,29 @@
           <h4 class="form-title">ORDER FORM</h4>
           <p>Please fill out all required * fields. Thanks!</p>
 
-          <form id="order-form" method="post" action="mail.php" class="reservations-box" onsubmit="sendToWhatsApp(event)">
+          <form id="order-form" class="reservations-box" onsubmit="sendToWhatsAppAndEmail(event)">
+            <!-- Name -->
             <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
               <div class="form-box">
                 <input type="text" name="form_name" id="form_name" placeholder="Name" required>
               </div>
             </div>
 
+            <!-- Email -->
+            <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+              <div class="form-box">
+                <input type="email" name="email" id="email" placeholder="E-Mail ID" required>
+              </div>
+            </div>
+
+            <!-- Phone -->
             <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
               <div class="form-box">
                 <input type="text" name="phone" id="phone" placeholder="Contact No." required>
               </div>
             </div>
 
+            <!-- Product -->
             <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
               <div class="form-box">
                 <select name="product" id="product" class="selectpicker" required>
@@ -1163,14 +1173,12 @@
                     <option value="Mango Chicken Pickle">Mango Chicken Pickle - ₹499</option>
                     <option value="Natukodi Pickle">Natukodi Pickle - ₹549</option>
                   </optgroup>
-
                   <optgroup label="Mutton Pickle">
                     <option value="Mutton Bone Pickle">Mutton Bone Pickle - ₹474</option>
                     <option value="Mutton Tokku Pickle">Mutton Tokku Pickle - ₹575</option>
                     <option value="Mutton Boneless Pickle">Mutton Boneless Pickle - ₹524</option>
                     <option value="Mutton Gongura Pickle">Mutton Gongura Pickle - ₹499</option>
                   </optgroup>
-
                   <optgroup label="Seafood Pickle">
                     <option value="Fish Pickle">Fish Pickle - ₹299</option>
                     <option value="Koramenu Fish Pickle">Koramenu Fish Pickle - ₹399</option>
@@ -1178,7 +1186,6 @@
                     <option value="Gongura Prawn Pickle">Gongura Prawn Pickle - ₹499</option>
                     <option value="Mango Prawn Pickle">Mango Prawn Pickle - ₹549</option>
                   </optgroup>
-
                   <optgroup label="Podi / Powders">
                     <option value="Kandi Podi">Kandi Podi - ₹224</option>
                     <option value="Munagaku Podi">Munagaku Podi - ₹249</option>
@@ -1191,6 +1198,7 @@
               </div>
             </div>
 
+            <!-- Quantity -->
             <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
               <div class="form-box">
                 <select name="quantity" id="quantity" class="selectpicker" required>
@@ -1203,6 +1211,7 @@
               </div>
             </div>
 
+            <!-- Submit -->
             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
               <div class="reserve-book-btn text-center">
                 <button class="whatsapp-btn" type="submit" id="submit">
@@ -1211,7 +1220,6 @@
               </div>
             </div>
           </form>
-
         </div>
       </div>
     </div>
@@ -1228,6 +1236,14 @@
   </div>
 </div>
 
+<!-- EmailJS SDK -->
+<script src="https://cdn.emailjs.com/dist/email.min.js"></script>
+<script>
+(function() {
+    emailjs.init("LPKZRX7B1It83cffY"); // Your Public Key
+})();
+</script>
+
 <script>
 const priceMap = {
   "Chicken Bone Pickle": 299,
@@ -1236,18 +1252,15 @@ const priceMap = {
   "Gongura Chicken Pickle": 399,
   "Mango Chicken Pickle": 499,
   "Natukodi Pickle": 549,
-
   "Mutton Bone Pickle": 474,
   "Mutton Tokku Pickle": 575,
   "Mutton Boneless Pickle": 524,
   "Mutton Gongura Pickle": 499,
-
   "Fish Pickle": 299,
   "Koramenu Fish Pickle": 399,
   "Prawns Pickle": 449,
   "Gongura Prawn Pickle": 499,
   "Mango Prawn Pickle": 549,
-
   "Kandi Podi": 224,
   "Munagaku Podi": 249,
   "Karam Podi": 249,
@@ -1256,10 +1269,11 @@ const priceMap = {
   "Garlic Karam Podi": 349
 };
 
-function sendToWhatsApp(event) {
+function sendToWhatsAppAndEmail(event) {
   event.preventDefault();
 
   const name = document.getElementById('form_name').value;
+  const email = document.getElementById('email').value;
   const phone = document.getElementById('phone').value;
   const product = document.getElementById('product').value;
   const quantity = parseInt(document.getElementById('quantity').value);
@@ -1267,21 +1281,28 @@ function sendToWhatsApp(event) {
   const basePrice = priceMap[product] || 0;
   const totalPrice = (quantity / 250) * basePrice;
 
-  const message = `Hello! 👋 I’d like to order:\n\n🧾 *${product}*\n📦 Quantity: ${quantity} gms\n💰 Total: ₹${totalPrice}\n👤 Name: ${name}\n📞 Contact: ${phone}\n\nFrom Mana Ammamma Ruchulu.`;
+  // WhatsApp message
+  const message = `Hello! 👋 I’d like to order:\n\n🧾 *${product}*\n📦 Quantity: ${quantity} gms\n💰 Total: ₹${totalPrice}\n👤 Name: ${name}\n📞 Contact: ${phone}\n📧 Email: ${email}\n\nFrom Mana Ammamma Ruchulu.`;
 
   const yourNumber = "919700935578";
-  const mobileURL = `whatsapp://send?phone=${yourNumber}&text=${encodeURIComponent(message)}`;
-  const webURL = `https://wa.me/${yourNumber}?text=${encodeURIComponent(message)}`;
+  const whatsappURL = `whatsapp://send?phone=${yourNumber}&text=${encodeURIComponent(message)}`;
+  window.location.href = whatsappURL;
 
-  window.location.href = mobileURL;
-  setTimeout(() => window.open(webURL, '_blank'), 1000);
-
-  // Send email backend
-  fetch('mail.php', {
-    method: 'POST',
-    body: new FormData(document.getElementById('order-form'))
+  // Send Email via EmailJS
+  emailjs.send("service_25u05y5", "template_9wy0hii", {
+      name: name,
+      email: email,
+      product: product,
+      quantity: quantity,
+      totalPrice: totalPrice,
+      message: message
+  }).then(function(response) {
+      console.log("Email sent successfully!", response.status, response.text);
+  }, function(error) {
+      console.error("Email failed:", error);
   });
 
+  // Show popup
   showPopup();
 }
 
@@ -1306,14 +1327,9 @@ function closePopup() {
   cursor: pointer;
   transition: 0.3s;
 }
-.whatsapp-btn:hover {
-  background-color: #1DA851;
-}
-.whatsapp-btn i {
-  margin-right: 8px;
-}
+.whatsapp-btn:hover { background-color: #1DA851; }
+.whatsapp-btn i { margin-right: 8px; }
 
-/* Popup Styles */
 .popup-overlay {
   display: none;
   position: fixed;
@@ -1331,14 +1347,8 @@ function closePopup() {
   text-align: center;
   animation: popup 0.4s ease;
 }
-.popup-content h3 {
-  color: #25D366;
-  margin-bottom: 10px;
-}
-.popup-content p {
-  margin-bottom: 15px;
-  font-size: 16px;
-}
+.popup-content h3 { color: #25D366; margin-bottom: 10px; }
+.popup-content p { margin-bottom: 15px; font-size: 16px; }
 .popup-content button {
   background: #25D366;
   color: white;
@@ -1348,13 +1358,8 @@ function closePopup() {
   cursor: pointer;
   font-weight: bold;
 }
-.popup-content button:hover {
-  background: #1DA851;
-}
-@keyframes popup {
-  from { transform: scale(0.8); opacity: 0; }
-  to { transform: scale(1); opacity: 1; }
-}
+.popup-content button:hover { background: #1DA851; }
+@keyframes popup { from { transform: scale(0.8); opacity: 0; } to { transform: scale(1); opacity: 1; } }
 </style>
 
 
