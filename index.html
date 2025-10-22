@@ -1466,15 +1466,77 @@ function closePopup() {
                     <h2 class="ft-title color-white"> Stay Connected ❤️ </h2>
                     <p>Follow <strong>Mana Ammamma Ruchulu</strong> for the latest updates, offers & delicious recipes!</p>
                     </div>
-                    <div class="social-icons">
-                    <a href="https://instagram.com/manaammammaruchulu" target="_blank"><i class="fa fa-instagram"></i></a>
-                    <a href="https://www.facebook.com/manaammammaruchulu" target="_blank"><i class="fa fa-facebook"></i></a>
-                    <a href="https://wa.me/919700935578" target="_blank"><i class="fa fa-whatsapp"></i></a>
-                    </div>
+                    <div class="social-icons text-center">
+                        <a href="https://instagram.com/manaammammaruchulu" target="_blank" class="social-icon instagram">
+                            <i class="fa fa-instagram"></i>
+                        </a>
+                        <a href="https://www.facebook.com/manaammammaruchulu" target="_blank" class="social-icon facebook">
+                            <i class="fa fa-facebook"></i>
+                        </a>
+                        <a href="https://wa.me/919700935578" target="_blank" class="social-icon whatsapp">
+                            <i class="fa fa-whatsapp"></i>
+                        </a>
+                     </div>
+
                 </div>
                 </div>
             </div>
          </div>
+
+                    <style>
+                        .social-icons {
+                        margin-top: 25px;
+                        display: flex;
+                        justify-content: center;
+                        gap: 25px;
+                        }
+
+                        .social-icon {
+                        display: inline-flex;
+                        align-items: center;
+                        justify-content: center;
+                        width: 65px;
+                        height: 65px;
+                        border-radius: 50%;
+                        color: white;
+                        font-size: 30px;
+                        text-decoration: none;
+                        transition: all 0.3s ease;
+                        box-shadow: 0 0 15px rgba(255,255,255,0.2);
+                        position: relative;
+                        }
+
+                        /* Individual brand colors */
+                        .instagram {
+                        background: radial-gradient(circle at 30% 107%, #fdf497 0%, #fdf497 5%, #fd5949 45%, #d6249f 60%, #285AEB 90%);
+                        }
+                        .facebook {
+                        background-color: #3b5998;
+                        }
+                        .whatsapp {
+                        background-color: #25D366;
+                        }
+
+                        /* Hover Animations */
+                        .social-icon:hover {
+                        transform: scale(1.2) rotate(10deg);
+                        box-shadow: 0 0 25px rgba(255,255,255,0.8);
+                        }
+
+                        /* Glowing pulse animation */
+                        @keyframes pulse {
+                        0% { transform: scale(1); box-shadow: 0 0 0 rgba(255,255,255,0.4); }
+                        50% { transform: scale(1.05); box-shadow: 0 0 25px rgba(255,255,255,0.5); }
+                        100% { transform: scale(1); box-shadow: 0 0 0 rgba(255,255,255,0.4); }
+                        }
+
+                        .social-icon {
+                        animation: pulse 2s infinite;
+                        }
+                        .social-icon:hover {
+                        animation: none; /* stops pulsing when hovered, only scale + glow */
+                        }
+                        </style>
 
         <!-- end footer-news -->
         <div class="footer-box pad-top-70">
