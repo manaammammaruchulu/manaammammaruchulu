@@ -31,6 +31,15 @@
 
     <!-- Modernizer -->
     <script src="js/modernizer.js"></script>
+    
+     <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-D0GZ63J0XZ"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-D0GZ63J0XZ');
+    </script>
 
     <!--[if lt IE 9]>
       <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
@@ -261,15 +270,15 @@
                         <div class="slider slider-nav">
                             <div class="tab-title-menu">
                                 <h2>Chicken Pickles</h2>
-                                <p> <i class="flaticon-canape"></i> </p>
+                                <p> <i class="flaticon-chicken"></i> </p>
                             </div>
                             <div class="tab-title-menu">
                                 <h2>Mutton Pickles</h2>
-                                <p> <i class="flaticon-dinner"></i> </p>
+                                <p> <i class="flaticon-meat"></i> </p>
                             </div>
                             <div class="tab-title-menu">
                                 <h2>Seafood Pickles</h2>
-                                <p> <i class="flaticon-desert"></i> </p>
+                                <p> <i class="flaticon-fish"></i> </p>
                             </div>
                             <div class="tab-title-menu">
                                 <h2>Homemade Powders</h2>
@@ -1163,7 +1172,7 @@
                 <select name="product" id="product" class="selectpicker" required onchange="updatePrice()">
                   <option selected disabled>Select Product</option>
 
-                  <optgroup label="Chicken Pickle">
+                  <optgroup label="Chicken Pickles">
                     <option value="Chicken Bone Pickle">Chicken Bone Pickle</option>
                     <option value="Boneless Chicken Pickle">Boneless Chicken Pickle</option>
                     <option value="Tokku Chicken Pickle">Tokku Chicken Pickle</option>
@@ -1172,14 +1181,14 @@
                     <option value="Natukodi Pickle">Natukodi Pickle</option>
                   </optgroup>
 
-                  <optgroup label="Mutton Pickle">
+                  <optgroup label="Mutton Pickles">
                     <option value="Mutton Bone Pickle">Mutton Bone Pickle</option>
                     <option value="Mutton Tokku Pickle">Mutton Tokku Pickle</option>
                     <option value="Mutton Boneless Pickle">Mutton Boneless Pickle</option>
                     <option value="Mutton Gongura Pickle">Mutton Gongura Pickle</option>
                   </optgroup>
 
-                  <optgroup label="Seafood Pickle">
+                  <optgroup label="Seafood Pickles">
                     <option value="Fish Pickle">Fish Pickle</option>
                     <option value="Koramenu Fish Pickle">Koramenu Fish Pickle</option>
                     <option value="Prawns Pickle">Prawns Pickle</option>
@@ -1713,6 +1722,8 @@ function closePopup() {
     <script src="js/bootstrap.min.js"></script>
     <!-- ALL PLUGINS -->
     <script src="js/custom.js"></script>
+
+    
 </body>
 
 </html>
