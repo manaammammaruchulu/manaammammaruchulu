@@ -1183,7 +1183,9 @@
 
 
 
-  <!-- === Start: Order section (paste into your page) === -->
+  
+    
+    <!-- === Start: Order section (paste into your page) === -->
 <div id="order" class="reservations-main pad-top-100 pad-bottom-100">
   <div class="container">
     <div class="row">
@@ -1195,8 +1197,10 @@
           <h4 class="form-title">ORDER FORM</h4>
           <p>Please fill out all required * fields. Thanks!</p>
 
+          <!-- note: onsubmit handled by sendToWhatsApp(event) -->
           <form id="order-form" class="reservations-box" onsubmit="sendToWhatsApp(event)">
 
+            <!-- Reordered: Name, Email, Phone -->
             <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
               <div class="form-box">
                 <input type="text" name="form_name" id="form_name" placeholder="Name" required>
@@ -1215,11 +1219,12 @@
               </div>
             </div>
 
-            <!-- Order Details -->
+            <!-- === Order Details === -->
             <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
               <div class="form-box">
                 <select name="product" id="product" class="selectpicker">
                   <option selected disabled>Select Product</option>
+
                   <optgroup label="Chicken Pickles">
                     <option value="Chicken Bone Pickle">Chicken Bone Pickle</option>
                     <option value="Boneless Chicken Pickle">Boneless Chicken Pickle</option>
@@ -1228,12 +1233,14 @@
                     <option value="Mango Chicken Pickle">Mango Chicken Pickle</option>
                     <option value="Natukodi Pickle">Natukodi Pickle</option>
                   </optgroup>
+
                   <optgroup label="Mutton Pickles">
                     <option value="Mutton Bone Pickle">Mutton Bone Pickle</option>
                     <option value="Mutton Tokku Pickle">Mutton Tokku Pickle</option>
                     <option value="Mutton Boneless Pickle">Mutton Boneless Pickle</option>
                     <option value="Mutton Gongura Pickle">Mutton Gongura Pickle</option>
                   </optgroup>
+
                   <optgroup label="Seafood Pickles">
                     <option value="Fish Pickle">Fish Pickle</option>
                     <option value="Koramenu Fish Pickle">Koramenu Fish Pickle</option>
@@ -1241,6 +1248,7 @@
                     <option value="Gongura Prawn Pickle">Gongura Prawn Pickle</option>
                     <option value="Mango Prawn Pickle">Mango Prawn Pickle</option>
                   </optgroup>
+
                   <optgroup label="Podi / Powders">
                     <option value="Kandi Podi">Kandi Podi</option>
                     <option value="Munagaku Podi">Munagaku Podi</option>
@@ -1265,17 +1273,18 @@
               </div>
             </div>
 
+            <!-- Add Item button (keeps design — small unobtrusive button) -->
             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12" style="margin-top:10px;">
               <div class="reserve-book-btn text-left" style="padding-left:15px;">
-                <button id="add-item-btn" class="whatsapp-btn" type="button">
+               <button id="add-item-btn" class="whatsapp-btn" type="button">
                   ➕ Add Item
                 </button>
               </div>
             </div>
 
-            <!-- Order Summary -->
-            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12" style="margin-top:15px; display:none;" id="order-summary">
-              <div style="border:1px solid #e6e6e6; padding:14px; border-radius:8px; background:#fff;">
+            <!-- Stylish WhatsApp-style Order Summary (Option B) -->
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12" style="margin-top:15px;">
+              <div id="order-summary" style="border:1px solid #e6e6e6; padding:14px; border-radius:8px; background:#fff;">
                 <h5 style="margin:0 0 8px 0; text-align:center;">🍴 <strong>Order Summary</strong></h5>
                 <div id="items-container" style="min-height:40px;">
                   <p style="text-align:center; color:#888; margin:12px 0;">No items added yet.</p>
@@ -1283,6 +1292,7 @@
               </div>
             </div>
 
+            <!-- Total and WhatsApp order button -->
             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12" style="margin-top:12px;">
               <p id="total-price" style="font-weight:bold; font-size:18px; text-align:center; margin-bottom:15px;">Total Price: ₹0</p>
               <div class="reserve-book-btn text-center">
@@ -1301,153 +1311,232 @@
 </div>
 <!-- === End: Order section === -->
 
+<!-- === Script: Add functionality without changing design === -->
 <script>
-const productPrices = {
-  "Chicken Bone Pickle": 250,"Boneless Chicken Pickle": 270,"Tokku Chicken Pickle": 260,
-  "Gongura Chicken Pickle": 270,"Mango Chicken Pickle": 280,"Natukodi Pickle": 300,
-  "Mutton Bone Pickle": 300,"Mutton Tokku Pickle": 320,"Mutton Boneless Pickle": 350,
-  "Mutton Gongura Pickle": 340,"Fish Pickle": 280,"Koramenu Fish Pickle": 290,
-  "Prawns Pickle": 400,"Gongura Prawn Pickle": 360,"Mango Prawn Pickle": 370,
-  "Kandi Podi": 120,"Munagaku Podi": 120,"Karam Podi": 120,
-  "Chilli Powder": 120,"Karivepaku Podi": 120,"Garlic Karam Podi": 120
-};
+  // Sample base prices per 250g (you said sample prices OK)
+  const productPrices = {
+    "Chicken Bone Pickle": 250,
+    "Boneless Chicken Pickle": 270,
+    "Tokku Chicken Pickle": 260,
+    "Gongura Chicken Pickle": 270,
+    "Mango Chicken Pickle": 280,
+    "Natukodi Pickle": 300,
+    "Mutton Bone Pickle": 300,
+    "Mutton Tokku Pickle": 320,
+    "Mutton Boneless Pickle": 350,
+    "Mutton Gongura Pickle": 340,
+    "Fish Pickle": 280,
+    "Koramenu Fish Pickle": 290,
+    "Prawns Pickle": 400,
+    "Gongura Prawn Pickle": 360,
+    "Mango Prawn Pickle": 370,
+    "Kandi Podi": 120,
+    "Munagaku Podi": 120,
+    "Karam Podi": 120,
+    "Chilli Powder": 120,
+    "Karivepaku Podi": 120,
+    "Garlic Karam Podi": 120
+  };
 
-let items = [];
-let itemIdCounter = 1;
+  // Items array: each item is { id, product, quantity, count, subtotal }
+  let items = [];
+  let itemIdCounter = 1;
 
-const productSelect = document.getElementById('product');
-const quantitySelect = document.getElementById('quantity');
-const addItemBtn = document.getElementById('add-item-btn');
-const itemsContainer = document.getElementById('items-container');
-const totalPriceEl = document.getElementById('total-price');
-const orderSummary = document.getElementById('order-summary');
+  // Elements
+  const productSelect = document.getElementById('product');
+  const quantitySelect = document.getElementById('quantity');
+  const addItemBtn = document.getElementById('add-item-btn');
+  const itemsContainer = document.getElementById('items-container');
+  const totalPriceEl = document.getElementById('total-price');
 
-function formatRupee(n){ return '₹'+Number(n).toLocaleString('en-IN', { maximumFractionDigits:0 }); }
-function computeSubtotal(product, quantity, count){ return (quantity/250)*productPrices[product]*count; }
-
-function renderItems(){
-  if(items.length === 0){
-    itemsContainer.innerHTML = '<p style="text-align:center; color:#888; margin:12px 0;">No items added yet.</p>';
-    totalPriceEl.innerText = 'Total Price: ₹0';
-    orderSummary.style.display = 'none';
-    return;
+  // Helper: format rupees
+  function formatRupee(n) {
+    return '₹' + Number(n).toLocaleString('en-IN', { maximumFractionDigits: 0 });
   }
-  orderSummary.style.display = 'block';
-  itemsContainer.innerHTML = '';
-  items.forEach(it=>{
-    const itemDiv = document.createElement('div');
-    itemDiv.style.display='flex';
-    itemDiv.style.justifyContent='space-between';
-    itemDiv.style.alignItems='center';
-    itemDiv.style.padding='6px 4px';
-    itemDiv.style.borderBottom='1px dashed #eee';
 
-    const left = document.createElement('div');
-    left.style.maxWidth='65%';
-    left.innerHTML=`<strong style="font-size:14px;">${it.product}</strong><div style="color:#555; font-size:13px; margin-top:4px;">Qty: ${it.quantity} gms</div>`;
+  // Compute subtotal: quantity is grams (250,500...), basePrice is per 250g
+  function computeSubtotal(product, quantity, count) {
+    const base = productPrices[product] || 0;
+    return (quantity / 250) * base * count;
+  }
 
-    const right=document.createElement('div');
-    right.style.textAlign='right';
+  // Render items in the WhatsApp-style list
+  function renderItems() {
+    itemsContainer.innerHTML = '';
+    if (items.length === 0) {
+      itemsContainer.innerHTML = '<p style="text-align:center; color:#888; margin:12px 0;">No items added yet.</p>';
+      totalPriceEl.innerText = 'Total Price: ₹0';
+      return;
+    }
 
-    const controls=document.createElement('div');
-    controls.style.display='inline-flex';
-    controls.style.alignItems='center';
-    controls.style.gap='6px';
-    controls.style.marginBottom='6px';
+    // Create list
+    items.forEach(it => {
+      const itemDiv = document.createElement('div');
+      itemDiv.style.display = 'flex';
+      itemDiv.style.justifyContent = 'space-between';
+      itemDiv.style.alignItems = 'center';
+      itemDiv.style.padding = '8px 6px';
+      itemDiv.style.borderBottom = '1px dashed #eee';
 
-    const btnMinus=document.createElement('button');
-    btnMinus.type='button';
-    btnMinus.innerText='−';
-    btnMinus.onclick=()=>changeCount(it.id,-1);
+      // Left: item name + qty
+      const left = document.createElement('div');
+      left.style.maxWidth = '65%';
+      left.innerHTML = `<strong style="font-size:14px;">${it.product}</strong>
+                        <div style="color:#555; font-size:13px; margin-top:4px;">Qty: ${it.quantity} gms</div>`;
 
-    const countSpan=document.createElement('span');
-    countSpan.innerText=it.count;
-    countSpan.style.minWidth='24px';
-    countSpan.style.display='inline-block';
-    countSpan.style.textAlign='center';
-    countSpan.style.fontWeight='600';
+      // Right: controls + price
+      const right = document.createElement('div');
+      right.style.textAlign = 'right';
 
-    const btnPlus=document.createElement('button');
-    btnPlus.type='button';
-    btnPlus.innerText='+';
-    btnPlus.onclick=()=>changeCount(it.id,+1);
+      // Controls: - [count] +
+      const controls = document.createElement('div');
+      controls.style.display = 'inline-flex';
+      controls.style.alignItems = 'center';
+      controls.style.gap = '6px';
+      controls.style.marginBottom = '6px';
 
-    const btnRemove=document.createElement('button');
-    btnRemove.type='button';
-    btnRemove.innerText='🗑';
-    btnRemove.style.background='transparent';
-    btnRemove.style.border='none';
-    btnRemove.style.cursor='pointer';
-    btnRemove.onclick=()=>removeItem(it.id);
+      const btnMinus = document.createElement('button');
+      btnMinus.type = 'button';
+      btnMinus.innerText = '−';
+      btnMinus.title = 'Decrease';
+      btnMinus.style.padding = '4px 8px';
+      btnMinus.style.borderRadius = '6px';
+      btnMinus.style.border = '1px solid #ccc';
+      btnMinus.style.background = '#fff';
+      btnMinus.onclick = () => changeCount(it.id, -1);
 
-    controls.appendChild(btnMinus); controls.appendChild(countSpan);
-    controls.appendChild(btnPlus); controls.appendChild(btnRemove);
+      const countSpan = document.createElement('span');
+      countSpan.innerText = it.count;
+      countSpan.style.minWidth = '24px';
+      countSpan.style.display = 'inline-block';
+      countSpan.style.textAlign = 'center';
+      countSpan.style.fontWeight = '600';
 
-    const priceDiv=document.createElement('div');
-    priceDiv.style.fontWeight='700';
-    priceDiv.style.marginTop='4px';
-    priceDiv.innerText=formatRupee(it.subtotal);
+      const btnPlus = document.createElement('button');
+      btnPlus.type = 'button';
+      btnPlus.innerText = '+';
+      btnPlus.title = 'Increase';
+      btnPlus.style.padding = '4px 8px';
+      btnPlus.style.borderRadius = '6px';
+      btnPlus.style.border = '1px solid #ccc';
+      btnPlus.style.background = '#fff';
+      btnPlus.onclick = () => changeCount(it.id, +1);
 
-    right.appendChild(controls); right.appendChild(priceDiv);
-    itemDiv.appendChild(left); itemDiv.appendChild(right);
-    itemsContainer.appendChild(itemDiv);
+      // Remove button
+      const btnRemove = document.createElement('button');
+      btnRemove.type = 'button';
+      btnRemove.innerText = '🗑';
+      btnRemove.title = 'Remove item';
+      btnRemove.style.marginLeft = '8px';
+      btnRemove.style.padding = '4px 6px';
+      btnRemove.style.border = 'none';
+      btnRemove.style.background = 'transparent';
+      btnRemove.style.cursor = 'pointer';
+      btnRemove.onclick = () => removeItem(it.id);
+
+      controls.appendChild(btnMinus);
+      controls.appendChild(countSpan);
+      controls.appendChild(btnPlus);
+      controls.appendChild(btnRemove);
+
+      // Price
+      const priceDiv = document.createElement('div');
+      priceDiv.style.fontWeight = '700';
+      priceDiv.style.marginTop = '4px';
+      priceDiv.innerText = formatRupee(it.subtotal);
+
+      right.appendChild(controls);
+      right.appendChild(priceDiv);
+
+      itemDiv.appendChild(left);
+      itemDiv.appendChild(right);
+
+      itemsContainer.appendChild(itemDiv);
+    });
+
+    updateTotal();
+  }
+
+  // Add item logic: product + quantity required
+  addItemBtn.addEventListener('click', () => {
+    const product = productSelect.value;
+    const quantity = parseInt(quantitySelect.value);
+
+    if (!product || !quantity) {
+      alert('Please select both product and quantity before adding.');
+      return;
+    }
+
+    // Check if same product+quantity exists — if yes, increment its count
+    const existing = items.find(it => it.product === product && it.quantity === quantity);
+    if (existing) {
+      existing.count += 1;
+      existing.subtotal = computeSubtotal(existing.product, existing.quantity, existing.count);
+    } else {
+      const newItem = {
+        id: itemIdCounter++,
+        product,
+        quantity,
+        count: 1,
+        subtotal: computeSubtotal(product, quantity, 1)
+      };
+      items.push(newItem);
+    }
+
+    // Reset selects to encourage next selection (but preserve design)
+    productSelect.selectedIndex = 0;
+    // quantitySelect.selectedIndex = 0; // keep quantity so user can add same size quickly
+
+    renderItems();
   });
-  updateTotal();
-}
 
-addItemBtn.addEventListener('click',()=>{
-  const product=productSelect.value;
-  const quantity=parseInt(quantitySelect.value);
-  if(!product||!quantity){
-    alert('Please select both product and quantity before adding.');
-    return;
+  // Change count (±)
+  function changeCount(id, delta) {
+    const idx = items.findIndex(it => it.id === id);
+    if (idx === -1) return;
+    items[idx].count += delta;
+    if (items[idx].count <= 0) {
+      // remove item
+      items.splice(idx, 1);
+    } else {
+      items[idx].subtotal = computeSubtotal(items[idx].product, items[idx].quantity, items[idx].count);
+    }
+    renderItems();
   }
-  const existing=items.find(it=>it.product===product&&it.quantity===quantity);
-  if(existing){
-    existing.count+=1;
-    existing.subtotal=computeSubtotal(existing.product,existing.quantity,existing.count);
-  }else{
-    items.push({id:itemIdCounter++,product,quantity,count:1,subtotal:computeSubtotal(product,quantity,1)});
+
+  // Remove item entirely
+  function removeItem(id) {
+    items = items.filter(it => it.id !== id);
+    renderItems();
   }
-  productSelect.selectedIndex=0;
-  renderItems();
-});
 
-function changeCount(id,delta){
-  const idx=items.findIndex(it=>it.id===id);
-  if(idx===-1) return;
-  items[idx].count+=delta;
-  if(items[idx].count<=0) items.splice(idx,1);
-  else items[idx].subtotal=computeSubtotal(items[idx].product,items[idx].quantity,items[idx].count);
-  renderItems();
-}
+  // Update total price display
+  function updateTotal() {
+    let total = 0;
+    items.forEach(it => total += it.subtotal);
+    totalPriceEl.innerText = 'Total Price: ' + formatRupee(total);
+  }
 
-function removeItem(id){
-  items=items.filter(it=>it.id!==id);
-  renderItems();
-}
-
-function updateTotal(){
-  let total=0;
-  items.forEach(it=>total+=it.subtotal);
-  totalPriceEl.innerText='Total Price: '+formatRupee(total);
-}
-
-function sendToWhatsApp(event){
+  // Build WhatsApp message and open wa.me link
+  function sendToWhatsApp(event) {
   event.preventDefault();
-  const name=document.getElementById('form_name').value.trim();
-  const email=document.getElementById('email').value.trim();
-  const phone=document.getElementById('phone').value.trim();
-  if(!name||!email||!phone){
+
+  const name = document.getElementById('form_name').value.trim();
+  const email = document.getElementById('email').value.trim();
+  const phone = document.getElementById('phone').value.trim();
+
+  if (!name || !email || !phone) {
     alert('Please fill Name, Email and Phone before ordering.');
     return;
   }
-  if(items.length===0){
+
+  if (items.length === 0) {
     alert('Please add at least one item to the order.');
     return;
   }
 
-  let msgLines=[];
+  // Build WhatsApp message
+  let msgLines = [];
   msgLines.push('📦 *New Order from Mana Ammamma Ruchulu!*');
   msgLines.push('----------------------------------------');
   msgLines.push(`👤 *Name:* ${name}`);
@@ -1457,22 +1546,31 @@ function sendToWhatsApp(event){
   msgLines.push('🍴 *Order Details:*');
   msgLines.push('');
 
-  items.forEach(it=>{
-    msgLines.push(`🟢 *Item:* ${it.product}\n📦 *Qty:* ${it.quantity} gms × ${it.count}\n💰 *Cost:* ${formatRupee(it.subtotal)}`);
+  // Add each item
+  items.forEach(it => {
+    msgLines.push(
+      `🟢 *Item:* ${it.product}\n📦 *Qty:* ${it.quantity} gms × ${it.count}\n💰 *Cost:* ${formatRupee(it.subtotal)}`
+    );
     msgLines.push('----------------------------------------');
   });
 
-  let total=items.reduce((s,it)=>s+it.subtotal,0);
+  // Total
+  let total = items.reduce((s, it) => s + it.subtotal, 0);
   msgLines.push(`🧾 *Total Amount:* ${formatRupee(total)}`);
   msgLines.push('');
   msgLines.push('🚚 Please confirm availability and delivery details.');
   msgLines.push('🙏 Thank you for ordering from *Mana Ammamma Ruchulu*! ❤️');
 
-  const message=msgLines.join('\n');
-  const whatsappNumber='9700935578';
-  const waUrl=`https://wa.me/${whatsappNumber}?text=${encodeURIComponent(message)}`;
-  window.open(waUrl,'_blank');
+  const message = msgLines.join('\n');
+
+  // ✅ Your WhatsApp number (India) in international format, no + or spaces
+  const whatsappNumber = '9700935578'; // <<< replace with your number
+
+  // Open WhatsApp with pre-filled message
+  const waUrl = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(message)}`;
+  window.open(waUrl, '_blank');
 }
+
 </script>
 
 
