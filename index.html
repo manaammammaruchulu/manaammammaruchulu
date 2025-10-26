@@ -1183,7 +1183,8 @@
 
   
     
-    <div id="order" class="reservations-main pad-top-100 pad-bottom-100">
+    <!-- Keep your existing structure -->
+<div id="order" class="reservations-main pad-top-100 pad-bottom-100">
   <div class="container">
     <div class="row">
       <div class="form-reservations-box">
@@ -1194,7 +1195,7 @@
           <h4 class="form-title">ORDER FORM</h4>
           <p>Please fill out all required * fields. Thanks!</p>
 
-          <form id="order-form" class="reservations-box" onsubmit="sendToWhatsAppAndEmail(event)">
+          <form id="order-form" class="reservations-box" onsubmit="sendToWhatsApp(event)">
             
             <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
               <div class="form-box">
@@ -1214,50 +1215,17 @@
               </div>
             </div>
 
-            <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+            <!-- Product List with counters -->
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
               <div class="form-box">
-                <select name="product" id="product" class="selectpicker" required onchange="updatePrice()">
-                  <option selected disabled>Select Product</option>
-
-                  <optgroup label="Chicken Pickles">
-                    <option value="Chicken Bone Pickle">Chicken Bone Pickle</option>
-                    <option value="Boneless Chicken Pickle">Boneless Chicken Pickle</option>
-                    <option value="Tokku Chicken Pickle">Tokku Chicken Pickle</option>
-                    <option value="Gongura Chicken Pickle">Gongura Chicken Pickle</option>
-                    <option value="Mango Chicken Pickle">Mango Chicken Pickle</option>
-                    <option value="Natukodi Pickle">Natukodi Pickle</option>
-                  </optgroup>
-
-                  <optgroup label="Mutton Pickles">
-                    <option value="Mutton Bone Pickle">Mutton Bone Pickle</option>
-                    <option value="Mutton Tokku Pickle">Mutton Tokku Pickle</option>
-                    <option value="Mutton Boneless Pickle">Mutton Boneless Pickle</option>
-                    <option value="Mutton Gongura Pickle">Mutton Gongura Pickle</option>
-                  </optgroup>
-
-                  <optgroup label="Seafood Pickles">
-                    <option value="Fish Pickle">Fish Pickle</option>
-                    <option value="Koramenu Fish Pickle">Koramenu Fish Pickle</option>
-                    <option value="Prawns Pickle">Prawns Pickle</option>
-                    <option value="Gongura Prawn Pickle">Gongura Prawn Pickle</option>
-                    <option value="Mango Prawn Pickle">Mango Prawn Pickle</option>
-                  </optgroup>
-
-                  <optgroup label="Podi / Powders">
-                    <option value="Kandi Podi">Kandi Podi</option>
-                    <option value="Munagaku Podi">Munagaku Podi</option>
-                    <option value="Karam Podi">Karam Podi</option>
-                    <option value="Chilli Powder">Chilli Powder</option>
-                    <option value="Karivepaku Podi">Karivepaku Podi</option>
-                    <option value="Garlic Karam Podi">Garlic Karam Podi</option>
-                  </optgroup>
-                </select>
+                <label style="font-weight:bold;">Select Products</label>
+                <div id="product-list"></div>
               </div>
             </div>
 
             <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
               <div class="form-box">
-                <select name="quantity" id="quantity" class="selectpicker" required onchange="updatePrice()">
+                <select name="quantity" id="quantity" class="selectpicker" required onchange="updateTotalPrice()">
                   <option selected disabled>Select Quantity</option>
                   <option value="250">250 gms</option>
                   <option value="500">500 gms</option>
@@ -1282,6 +1250,112 @@
     </div>
   </div>
 </div>
+
+<!-- JavaScript -->
+<script>
+  const productPrices = {
+    "Chicken Bone Pickle": 250,
+    "Boneless Chicken Pickle": 270,
+    "Tokku Chicken Pickle": 260,
+    "Gongura Chicken Pickle": 270,
+    "Mango Chicken Pickle": 280,
+    "Natukodi Pickle": 300,
+    "Mutton Bone Pickle": 300,
+    "Mutton Tokku Pickle": 320,
+    "Mutton Boneless Pickle": 330,
+    "Mutton Gongura Pickle": 340,
+    "Fish Pickle": 260,
+    "Koramenu Fish Pickle": 290,
+    "Prawns Pickle": 350,
+    "Gongura Prawn Pickle": 360,
+    "Mango Prawn Pickle": 370,
+    "Kandi Podi": 180,
+    "Munagaku Podi": 200,
+    "Karam Podi": 160,
+    "Chilli Powder": 150,
+    "Karivepaku Podi": 190,
+    "Garlic Karam Podi": 210
+  };
+
+  const productList = document.getElementById("product-list");
+  const quantityDropdown = document.getElementById("quantity");
+
+  // Create dynamic list of products with + / - buttons
+  for (let product in productPrices) {
+    const div = document.createElement("div");
+    div.className = "product-item";
+    div.style.display = "flex";
+    div.style.justifyContent = "space-between";
+    div.style.alignItems = "center";
+    div.style.marginBottom = "8px";
+
+    div.innerHTML = `
+      <span>${product}</span>
+      <div>
+        <button type="button" onclick="updateCount('${product}', -1)">-</button>
+        <span id="${product.replace(/\s+/g, '_')}_count">0</span>
+        <button type="button" onclick="updateCount('${product}', 1)">+</button>
+      </div>
+    `;
+    productList.appendChild(div);
+  }
+
+  const selectedCounts = {}; // store item counts
+
+  function updateCount(product, change) {
+    const id = product.replace(/\s+/g, '_') + "_count";
+    const span = document.getElementById(id);
+    const current = selectedCounts[product] || 0;
+    const newCount = Math.max(0, current + change);
+    selectedCounts[product] = newCount;
+    span.textContent = newCount;
+    updateTotalPrice();
+  }
+
+  function updateTotalPrice() {
+    const quantity = parseInt(quantityDropdown.value) || 0;
+    let total = 0;
+
+    for (let p in selectedCounts) {
+      const count = selectedCounts[p];
+      if (count > 0) {
+        total += (quantity / 250) * productPrices[p] * count;
+      }
+    }
+
+    document.getElementById("total-price").innerText = `Total Price: ₹${total}`;
+  }
+
+  function sendToWhatsApp(event) {
+    event.preventDefault();
+
+    const name = document.getElementById("form_name").value;
+    const email = document.getElementById("email").value;
+    const phone = document.getElementById("phone").value;
+    const quantity = document.getElementById("quantity").value;
+    const totalText = document.getElementById("total-price").innerText;
+
+    // Prepare product details
+    let orderDetails = "";
+    for (let p in selectedCounts) {
+      if (selectedCounts[p] > 0) {
+        orderDetails += `• ${p} × ${selectedCounts[p]}\n`;
+      }
+    }
+
+    const message = `Hi, I'd like to order from *Mana Ammamma Ruchulu*:\n\n` +
+      `👤 Name: ${name}\n📞 Contact: ${phone}\n📧 Email: ${email}\n` +
+      `🍴 Items:\n${orderDetails}\n📦 Quantity Size: ${quantity} gms\n💰 ${totalText}\n\nPlease confirm availability.`;
+
+    const phoneNumber = "919876543210"; // Replace with your WhatsApp number
+    const whatsappURL = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`;
+    window.open(whatsappURL, "_blank");
+  }
+</script>
+
+
+
+ 
 
 <!-- Popup Modal -->
 <div id="popup" class="popup-overlay">
