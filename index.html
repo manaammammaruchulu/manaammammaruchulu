@@ -1517,57 +1517,58 @@
 
   // Build WhatsApp message and open wa.me link
   function sendToWhatsApp(event) {
-    event.preventDefault();
+  event.preventDefault();
 
-    const name = document.getElementById('form_name').value.trim();
-    const email = document.getElementById('email').value.trim();
-    const phone = document.getElementById('phone').value.trim();
+  const name = document.getElementById('form_name').value.trim();
+  const email = document.getElementById('email').value.trim();
+  const phone = document.getElementById('phone').value.trim();
 
-    if (!name || !email || !phone) {
-      alert('Please fill Name, Email and Phone before ordering.');
-      return;
-    }
-
-    if (items.length === 0) {
-      alert('Please add at least one item to the order.');
-      return;
-    }
-
-    // Compose WhatsApp-style message (plain text, but includes emoji)
-    msgLines.push(`👤 Name: ${name}`);
-    msgLines.push(`📧 Email: ${email}`);
-    msgLines.push(`📱 Phone: ${phone}`);
-   
-   
-    let msgLines = [];
-    msgLines.push('🍴 *Order Details*');
-    msgLines.push('-----------------------------');
-
-    items.forEach(it => {
-      // Example: "• Chicken Bone Pickle (250 gms) × 2 = ₹500"
-      msgLines.push(`• ${it.product} (${it.quantity} gms) × ${it.count} = ${formatRupee(it.subtotal)}`);
-    });
-
-    // Total
-    let total = items.reduce((s, it) => s + it.subtotal, 0);
-    msgLines.push('');
-    msgLines.push(`💰 *Total*: ${formatRupee(total)}`);
-    msgLines.push('');
-   
-    msgLines.push('');
-    msgLines.push('Please confirm availability and delivery details. Thank you!');
-
-    const message = msgLines.join('\n');
-
-    // Replace with your WhatsApp number (international format, no + or spaces)
-    const whatsappNumber = '919876543210'; // <-- <<< replace with your number
-
-    const waUrl = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(message)}`;
-    window.open(waUrl, '_blank');
+  if (!name || !email || !phone) {
+    alert('Please fill Name, Email and Phone before ordering.');
+    return;
   }
 
-  // Initial render
-  renderItems();
+  if (items.length === 0) {
+    alert('Please add at least one item to the order.');
+    return;
+  }
+
+  // Build WhatsApp message
+  let msgLines = [];
+  msgLines.push('📦 *New Order from Mana Ammamma Ruchulu!*');
+  msgLines.push('----------------------------------------');
+  msgLines.push(`👤 *Name:* ${name}`);
+  msgLines.push(`📧 *Email:* ${email}`);
+  msgLines.push(`📱 *Phone:* ${phone}`);
+  msgLines.push('----------------------------------------');
+  msgLines.push('🍴 *Order Details:*');
+  msgLines.push('');
+
+  // Add each item
+  items.forEach(it => {
+    msgLines.push(
+      `🟢 *Item:* ${it.product}\n📦 *Qty:* ${it.quantity} gms × ${it.count}\n💰 *Cost:* ${formatRupee(it.subtotal)}`
+    );
+    msgLines.push('----------------------------------------');
+  });
+
+  // Total
+  let total = items.reduce((s, it) => s + it.subtotal, 0);
+  msgLines.push(`🧾 *Total Amount:* ${formatRupee(total)}`);
+  msgLines.push('');
+  msgLines.push('🚚 Please confirm availability and delivery details.');
+  msgLines.push('🙏 Thank you for ordering from *Mana Ammamma Ruchulu*! ❤️');
+
+  const message = msgLines.join('\n');
+
+  // ✅ Your WhatsApp number (India) in international format, no + or spaces
+  const whatsappNumber = '919876543210'; // <<< replace with your number
+
+  // Open WhatsApp with pre-filled message
+  const waUrl = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(message)}`;
+  window.open(waUrl, '_blank');
+}
+
 </script>
 
 
