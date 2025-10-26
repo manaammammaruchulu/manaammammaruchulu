@@ -1412,17 +1412,25 @@
 
     const existing = items.find(it => it.product === product && it.quantity === quantity);
     if (existing) {
-      existing.count += 1;
-      existing.subtotal = computeSubtotal(existing.product, existing.quantity, existing.count);
+      alert('This product with the selected quantity is already in the order. You can increase the count using the + button.');
+      return; // Do not add again
     } else {
-      items.push({ id: itemIdCounter++, product, quantity, count:1, subtotal: computeSubtotal(product, quantity,1)});
+      items.push({ 
+        id: itemIdCounter++, 
+        product, 
+        quantity, 
+        count: 1, 
+        subtotal: computeSubtotal(product, quantity, 1)
+      });
     }
 
+    // Reset selects to encourage next selection
     productSelect.selectedIndex = 0;
     quantitySelect.selectedIndex = 0;
 
     renderItems();
-  });
+});
+
 
   function changeCount(id, delta){
     const idx = items.findIndex(it=>it.id===id);
