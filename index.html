@@ -1181,6 +1181,8 @@
    <!--  </div> -->
     <!-- end pricing-main -->
 
+
+
   <!-- === Start: Order section (paste into your page) === -->
 <div id="order" class="reservations-main pad-top-100 pad-bottom-100">
   <div class="container">
@@ -1219,7 +1221,6 @@
               <div class="form-box">
                 <select name="product" id="product" class="selectpicker">
                   <option selected disabled>Select Product</option>
-
                   <optgroup label="Chicken Pickles">
                     <option value="Chicken Bone Pickle">Chicken Bone Pickle</option>
                     <option value="Boneless Chicken Pickle">Boneless Chicken Pickle</option>
@@ -1228,14 +1229,12 @@
                     <option value="Mango Chicken Pickle">Mango Chicken Pickle</option>
                     <option value="Natukodi Pickle">Natukodi Pickle</option>
                   </optgroup>
-
                   <optgroup label="Mutton Pickles">
                     <option value="Mutton Bone Pickle">Mutton Bone Pickle</option>
                     <option value="Mutton Tokku Pickle">Mutton Tokku Pickle</option>
                     <option value="Mutton Boneless Pickle">Mutton Boneless Pickle</option>
                     <option value="Mutton Gongura Pickle">Mutton Gongura Pickle</option>
                   </optgroup>
-
                   <optgroup label="Seafood Pickles">
                     <option value="Fish Pickle">Fish Pickle</option>
                     <option value="Koramenu Fish Pickle">Koramenu Fish Pickle</option>
@@ -1243,7 +1242,6 @@
                     <option value="Gongura Prawn Pickle">Gongura Prawn Pickle</option>
                     <option value="Mango Prawn Pickle">Mango Prawn Pickle</option>
                   </optgroup>
-
                   <optgroup label="Podi / Powders">
                     <option value="Kandi Podi">Kandi Podi</option>
                     <option value="Munagaku Podi">Munagaku Podi</option>
@@ -1271,7 +1269,7 @@
             <!-- Add Item button -->
             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12" style="margin-top:10px;">
               <div class="reserve-book-btn text-left" style="padding-left:15px;">
-               <button id="add-item-btn" class="whatsapp-btn" type="button">
+                <button id="add-item-btn" class="whatsapp-btn" type="button">
                   ➕ Add Item
                 </button>
               </div>
@@ -1303,154 +1301,139 @@
     </div>
   </div>
 </div>
-<!-- === End: Order section === -->
 
 <script>
-  const productPrices = {
-    "Chicken Bone Pickle": 250,
-    "Boneless Chicken Pickle": 270,
-    "Tokku Chicken Pickle": 260,
-    "Gongura Chicken Pickle": 270,
-    "Mango Chicken Pickle": 280,
-    "Natukodi Pickle": 300,
-    "Mutton Bone Pickle": 300,
-    "Mutton Tokku Pickle": 320,
-    "Mutton Boneless Pickle": 350,
-    "Mutton Gongura Pickle": 340,
-    "Fish Pickle": 280,
-    "Koramenu Fish Pickle": 290,
-    "Prawns Pickle": 400,
-    "Gongura Prawn Pickle": 360,
-    "Mango Prawn Pickle": 370,
-    "Kandi Podi": 120,
-    "Munagaku Podi": 120,
-    "Karam Podi": 120,
-    "Chilli Powder": 120,
-    "Karivepaku Podi": 120,
-    "Garlic Karam Podi": 120
-  };
+const productPrices = {
+  "Chicken Bone Pickle": 250,
+  "Boneless Chicken Pickle": 270,
+  "Tokku Chicken Pickle": 260,
+  "Gongura Chicken Pickle": 270,
+  "Mango Chicken Pickle": 280,
+  "Natukodi Pickle": 300,
+  "Mutton Bone Pickle": 300,
+  "Mutton Tokku Pickle": 320,
+  "Mutton Boneless Pickle": 350,
+  "Mutton Gongura Pickle": 340,
+  "Fish Pickle": 280,
+  "Koramenu Fish Pickle": 290,
+  "Prawns Pickle": 400,
+  "Gongura Prawn Pickle": 360,
+  "Mango Prawn Pickle": 370,
+  "Kandi Podi": 120,
+  "Munagaku Podi": 120,
+  "Karam Podi": 120,
+  "Chilli Powder": 120,
+  "Karivepaku Podi": 120,
+  "Garlic Karam Podi": 120
+};
 
-  let items = [];
-  let itemIdCounter = 1;
+let items = [];
+let itemIdCounter = 1;
 
-  const productSelect = document.getElementById('product');
-  const quantitySelect = document.getElementById('quantity');
-  const addItemBtn = document.getElementById('add-item-btn');
-  const itemsContainer = document.getElementById('items-container');
-  const totalPriceEl = document.getElementById('total-price');
-  const orderSummaryEl = document.getElementById('order-summary');
+const productSelect = document.getElementById('product');
+const quantitySelect = document.getElementById('quantity');
+const addItemBtn = document.getElementById('add-item-btn');
+const itemsContainer = document.getElementById('items-container');
+const totalPriceEl = document.getElementById('total-price');
+const orderSummaryEl = document.getElementById('order-summary');
 
-  function formatRupee(n) {
-    return '₹' + Number(n).toLocaleString('en-IN', { maximumFractionDigits: 0 });
+function formatRupee(n){
+  return '₹' + Number(n).toLocaleString('en-IN', {maximumFractionDigits:0});
+}
+
+function computeSubtotal(product, quantity, count){
+  const base = productPrices[product] || 0;
+  return (quantity / 250) * base * count;
+}
+
+function renderItems(){
+  if(items.length===0){
+    orderSummaryEl.style.display='none';
+    itemsContainer.innerHTML='<p style="text-align:center; color:#888; margin:12px 0;">No items added yet.</p>';
+    totalPriceEl.innerText='Total Price: ₹0';
+    return;
   }
 
-  function computeSubtotal(product, quantity, count) {
-    const base = productPrices[product] || 0;
-    return (quantity / 250) * base * count;
-  }
-
-  function renderItems() {
-    if (items.length === 0) {
-      orderSummaryEl.style.display = 'none';
-      itemsContainer.innerHTML = '<p style="text-align:center; color:#888; margin:12px 0;">No items added yet.</p>';
-      totalPriceEl.innerText = 'Total Price: ₹0';
-      return;
-    }
-
-    orderSummaryEl.style.display = 'block';
-    itemsContainer.innerHTML = '';
-
-    items.forEach(it => {
-      const itemDiv = document.createElement('div');
-      itemDiv.style.padding = '6px 0';
-      itemDiv.style.borderBottom = '1px dashed #eee';
-      itemDiv.innerHTML = `<strong>Item ID:</strong> ${it.id}`;
-      itemsContainer.appendChild(itemDiv);
-    });
-
-    updateTotal();
-  }
-
-  addItemBtn.addEventListener('click', () => {
-    const product = productSelect.value;
-    const quantity = parseInt(quantitySelect.value);
-
-    // ✅ Validation: product and quantity must be selected
-    if (!product) {
-      alert('Please select a product.');
-      return;
-    }
-    if (!quantity) {
-      alert('Please select a quantity.');
-      return;
-    }
-
-    const existing = items.find(it => it.product === product && it.quantity === quantity);
-    if (existing) {
-      existing.count += 1;
-      existing.subtotal = computeSubtotal(existing.product, existing.quantity, existing.count);
-    } else {
-      const newItem = {
-        id: itemIdCounter++,
-        product,
-        quantity,
-        count: 1,
-        subtotal: computeSubtotal(product, quantity, 1)
-      };
-      items.push(newItem);
-    }
-
-    productSelect.selectedIndex = 0;
-    renderItems();
+  orderSummaryEl.style.display='block';
+  itemsContainer.innerHTML='';
+  items.forEach(it=>{
+    const div = document.createElement('div');
+    div.style.padding='6px 0';
+    div.style.borderBottom='1px dashed #eee';
+    div.innerHTML = `<strong>Item ID:</strong> ${it.id}`;
+    itemsContainer.appendChild(div);
   });
 
-  function updateTotal() {
-    let total = items.reduce((sum, it) => sum + it.subtotal, 0);
-    totalPriceEl.innerText = 'Total Price: ' + formatRupee(total);
+  let total = items.reduce((sum,it)=>sum+it.subtotal,0);
+  totalPriceEl.innerText='Total Price: '+formatRupee(total);
+}
+
+// ✅ Add item with proper validation
+addItemBtn.addEventListener('click', ()=>{
+  const product = productSelect.value;
+  const quantity = parseInt(quantitySelect.value);
+
+  if(!product){
+    alert('Please select a product before adding.');
+    return;
+  }
+  if(!quantity){
+    alert('Please select a quantity before adding.');
+    return;
   }
 
-  function sendToWhatsApp(event) {
-    event.preventDefault();
-
-    const name = document.getElementById('form_name').value.trim();
-    const email = document.getElementById('email').value.trim();
-    const phone = document.getElementById('phone').value.trim();
-
-    if (!name || !email || !phone) {
-      alert('Please fill Name, Email and Phone before ordering.');
-      return;
-    }
-
-    if (items.length === 0) {
-      alert('Please add at least one item to the order.');
-      return;
-    }
-
-    let msgLines = [];
-    msgLines.push('📦 *New Order from Mana Ammamma Ruchulu!*');
-    msgLines.push('----------------------------------------');
-    msgLines.push(`👤 *Name:* ${name}`);
-    msgLines.push(`📧 *Email:* ${email}`);
-    msgLines.push(`📱 *Phone:* ${phone}`);
-    msgLines.push('----------------------------------------');
-    msgLines.push('🍴 *Order Details:*');
-
-    items.forEach(it => {
-      msgLines.push(`🟢 *Item:* ${it.product}\n📦 *Qty:* ${it.quantity} gms × ${it.count}\n💰 *Cost:* ${formatRupee(it.subtotal)}`);
-      msgLines.push('----------------------------------------');
-    });
-
-    let total = items.reduce((s, it) => s + it.subtotal, 0);
-    msgLines.push(`🧾 *Total Amount:* ${formatRupee(total)}`);
-    msgLines.push('');
-    msgLines.push('🚚 Please confirm availability and delivery details.');
-    msgLines.push('🙏 Thank you for ordering from *Mana Ammamma Ruchulu*! ❤️');
-
-    const message = msgLines.join('\n');
-    const whatsappNumber = '9700935578';
-    const waUrl = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(message)}`;
-    window.open(waUrl, '_blank');
+  const existing = items.find(it=>it.product===product && it.quantity===quantity);
+  if(existing){
+    existing.count+=1;
+    existing.subtotal = computeSubtotal(existing.product,existing.quantity,existing.count);
+  }else{
+    items.push({id:itemIdCounter++, product, quantity, count:1, subtotal:computeSubtotal(product,quantity,1)});
   }
+
+  productSelect.selectedIndex=0;
+  renderItems();
+});
+
+function sendToWhatsApp(event){
+  event.preventDefault();
+  const name = document.getElementById('form_name').value.trim();
+  const email = document.getElementById('email').value.trim();
+  const phone = document.getElementById('phone').value.trim();
+
+  if(!name||!email||!phone){
+    alert('Please fill Name, Email and Phone before ordering.');
+    return;
+  }
+  if(items.length===0){
+    alert('Please add at least one item to the order.');
+    return;
+  }
+
+  let msgLines = [];
+  msgLines.push('📦 *New Order from Mana Ammamma Ruchulu!*');
+  msgLines.push('----------------------------------------');
+  msgLines.push(`👤 *Name:* ${name}`);
+  msgLines.push(`📧 *Email:* ${email}`);
+  msgLines.push(`📱 *Phone:* ${phone}`);
+  msgLines.push('----------------------------------------');
+  msgLines.push('🍴 *Order Details:*');
+
+  items.forEach(it=>{
+    msgLines.push(`🟢 Item ID: ${it.id}`);
+  });
+
+  let total = items.reduce((sum,it)=>sum+it.subtotal,0);
+  msgLines.push('----------------------------------------');
+  msgLines.push(`🧾 *Total Amount:* ${formatRupee(total)}`);
+  msgLines.push('');
+  msgLines.push('🚚 Please confirm availability and delivery details.');
+  msgLines.push('🙏 Thank you for ordering from *Mana Ammamma Ruchulu*! ❤️');
+
+  const message = msgLines.join('\n');
+  const whatsappNumber='9700935578';
+  const waUrl = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(message)}`;
+  window.open(waUrl,'_blank');
+}
 </script>
 
 
