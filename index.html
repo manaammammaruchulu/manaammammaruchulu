@@ -1182,8 +1182,7 @@
     <!-- end pricing-main -->
 
 
-
-  <!-- === Start: Order section === -->
+<!-- === Start: Order section === -->
 <div id="order" class="reservations-main pad-top-100 pad-bottom-100">
   <div class="container">
     <div class="row">
@@ -1196,7 +1195,6 @@
           <p>Please fill out all required * fields. Thanks!</p>
 
           <form id="order-form" class="reservations-box" onsubmit="sendToWhatsApp(event)">
-
             <!-- Name, Email, Phone -->
             <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
               <div class="form-box">
@@ -1296,7 +1294,6 @@
                 </button>
               </div>
             </div>
-
           </form>
         </div>
       </div>
@@ -1304,6 +1301,25 @@
   </div>
 </div>
 <!-- === End: Order section === -->
+
+<!-- Toast Notification -->
+<div id="toast" style="
+  position: fixed;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%) translateY(50px);
+  background: #25d366;
+  color: #fff;
+  padding: 10px 18px;
+  border-radius: 30px;
+  font-weight: 600;
+  opacity: 0;
+  transition: all 0.4s ease;
+  z-index: 9999;
+  box-shadow: 0 3px 10px rgba(0,0,0,0.2);
+">
+  Item quantity updated 🛒
+</div>
 
 <script>
   const productPrices = {
@@ -1323,6 +1339,17 @@
   const totalPriceEl = document.getElementById('total-price');
   const orderSummaryWrapper = document.getElementById('order-summary-wrapper');
   const totalPriceWrapper = document.getElementById('total-price-wrapper');
+  const toast = document.getElementById('toast');
+
+  function showToast(msg) {
+    toast.innerText = msg;
+    toast.style.opacity = '1';
+    toast.style.transform = 'translateX(-50%) translateY(0)';
+    setTimeout(() => {
+      toast.style.opacity = '0';
+      toast.style.transform = 'translateX(-50%) translateY(50px)';
+    }, 2000);
+  }
 
   function formatRupee(n) {
     return '₹' + Number(n).toLocaleString('en-IN', { maximumFractionDigits: 0 });
@@ -1412,8 +1439,9 @@
 
     const existing = items.find(it => it.product === product && it.quantity === quantity);
     if (existing) {
-      alert('This product with the selected quantity is already in the order. You can increase the count using the + button.');
-      return; // Do not add again
+      existing.count += 1;
+      existing.subtotal = computeSubtotal(existing.product, existing.quantity, existing.count);
+      showToast(`Added another ${existing.product} (${existing.quantity} gms)`);
     } else {
       items.push({ 
         id: itemIdCounter++, 
@@ -1424,13 +1452,10 @@
       });
     }
 
-    // Reset selects to encourage next selection
     productSelect.selectedIndex = 0;
     quantitySelect.selectedIndex = 0;
-
     renderItems();
-});
-
+  });
 
   function changeCount(id, delta){
     const idx = items.findIndex(it=>it.id===id);
@@ -1490,7 +1515,6 @@
     window.open(waUrl,'_blank');
   }
 </script>
-
 
  
 
