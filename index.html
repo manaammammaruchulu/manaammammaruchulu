@@ -1375,35 +1375,7 @@ function sendToWhatsApp(e){
   });
 
   // WhatsApp message
-// WhatsApp (Enhanced Message + Same Tab)
-const yourNumber = "919849790312"; // your WhatsApp number
-
-let fullOrder = "";
-if (items && items.length > 0) {
-  items.forEach((it, index) => {
-    fullOrder += `\n${index + 1}. 🟢 *${it.product}*\n   📦 Qty: ${it.quantity} gms × ${it.count}\n   💰 Cost: ${formatRupee(it.subtotal)}\n`;
-  });
-} else {
-  fullOrder = "\n(No detailed items captured)";
-}
-
-const total = items.reduce((s, it) => s + it.subtotal, 0);
-const message = 
-`📦 *New Order from ${name}*\n` +
-`----------------------------------------\n` +
-`👤 *Name:* ${name}\n` +
-`📧 *Email:* ${email}\n` +
-`📱 *Phone:* ${phone}\n` +
-`----------------------------------------\n` +
-`🍴 *Order Details:*\n${fullOrder}\n` +
-`----------------------------------------\n` +
-`🧾 *Total Amount:* ${formatRupee(total)}\n` +
-`🚚 Please confirm availability and delivery details.\n` +
-`🙏 Thank you for ordering from *Mana Ammamma Ruchulu*! ❤️`;
-
-const whatsappURL = `https://wa.me/${yourNumber}?text=${encodeURIComponent(message)}`;
-window.location.href = whatsappURL;
-
+  const msg=`📦 New Order from ${name}\nTotal: ${formatRupee(total)}\nPlease check your email for full details.`;
   window.open(`https://wa.me/919849790312?text=${encodeURIComponent(msg)}`,'_blank');
 
   setTimeout(()=>showPopup(name,phone,total),1000);
@@ -1423,30 +1395,6 @@ function closePopup(){
 </script>
 
 <style>
-
-.whatsapp-btn {
-  background: linear-gradient(90deg, #25D366, #128C7E);
-  border: none;
-  color: white;
-  padding: 14px 35px;
-  font-size: 18px;
-  border-radius: 50px;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  box-shadow: 0 5px 15px rgba(37, 211, 102, 0.3);
-}
-
-.whatsapp-btn:hover {
-  background: linear-gradient(90deg, #128C7E, #25D366);
-  transform: translateY(-2px);
-  box-shadow: 0 7px 20px rgba(37, 211, 102, 0.4);
-}
-
-.whatsapp-btn i {
-  margin-right: 8px;
-  font-size: 20px;
-}
-
 
 .whatsapp-btn {
   background: linear-gradient(90deg, #25D366, #128C7E);
