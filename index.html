@@ -1532,19 +1532,7 @@ function sendToWhatsApp(event) {
   const waUrl = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(msgLines.join('\n'))}`;
   window.location.href = waUrl;
 
- // === Admin Email (Full order) ===
-emailjs.send("service_25u05y5", "template_9wy0hii", {
-  to_email: "manaammammaruchulu@gmail.com",
-  subject: "📦 New Order Received – Mana Ammamma Ruchulu",
-  name,
-  email,
-  phone,
-  totalPrice: total,
-  message: msgLines.join('\n')
-});
-
-
-// === Send email to COMPANY (Admin) ===
+ // === Send email to COMPANY (Admin) ===
 emailjs.send("service_25u05y5", "template_9wy0hii", {
   to_email: "manaammammaruchulu@gmail.com",
   subject: `Contact Us – ${name} – New Order`,
@@ -1566,6 +1554,12 @@ emailjs.send("service_25u05y5", "template_9wy0hii", {
   message: `Dear ${name},\n\nThank you for ordering from Mana Ammamma Ruchulu! ❤️\n\nHere are your order details:\n${items.map(it => `• ${it.product} (${it.quantity} gms × ${it.count}) - ₹${it.subtotal}`).join('\n')}\n----------------------------------------\nTotal: ₹${total}\n\nWe'll contact you on WhatsApp soon for delivery confirmation.\n\n– Team Mana Ammamma Ruchulu`
 });
 
+
+  // ✅ Show Popup after short delay
+  setTimeout(() => {
+    showPopup(name, phone);
+  }, 2500);
+}
 
 function showPopup(name, phone) {
   const popup = document.getElementById('popup');
