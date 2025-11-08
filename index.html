@@ -1384,7 +1384,7 @@ function sendToWhatsApp(e){
 
   const whatsappText=encodeURIComponent(msgLines.join(`\n`));
   const whatsappNumber='919849790312'; // your business number
-  const whatsappURL=`https://wa.me/${whatsappNumber}?text=${whatsappText}`;
+  //const whatsappURL=`https://wa.me/${whatsappNumber}?text=${whatsappText}`;
   //window.open(whatsappURL,'_blank');
   
   const details=items.map(i=>`🍴 ${i.product} (${i.quantity}g × ${i.count}) — ${formatRupee(i.subtotal)}`).join('<br>');
@@ -1404,7 +1404,8 @@ function sendToWhatsApp(e){
   });
 
   // WhatsApp message
-  //window.open(`https://wa.me/919849790312?text=${encodeURIComponent(msgLines)}`,'_blank');
+ // window.open(`https://wa.me/919849790312?text=${encodeURIComponent(msgLines)}`,'_blank');
+  window.open(`https://wa.me/${whatsappNumber}?text=${whatsappText}`, '_blank');
 
   setTimeout(()=>showPopup(name,phone,total),1000);
 }
