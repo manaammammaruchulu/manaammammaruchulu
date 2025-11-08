@@ -1349,16 +1349,50 @@ document.getElementById('add-item-btn').onclick=()=>{
 
 function showToast(msg){const t=document.getElementById('toast');t.innerText=msg;t.style.opacity='1';t.style.transform='translateX(-50%)';setTimeout(()=>{t.style.opacity='0';},2000);}
 
-function sendToWhatsApp(e){
-  e.preventDefault();
-  const name=document.getElementById('form_name').value.trim();
-  const email=document.getElementById('email').value.trim();
-  const phone=document.getElementById('phone').value.trim();
-  if(!name||!email||!phone){alert('Please fill all required fields.');return;}
-  if(items.length===0){alert('Please add at least one item.');return;}
+function sendToWhatsApp(event) {
+  event.preventDefault();
 
-  const total=items.reduce((s,i)=>s+i.subtotal,0);
-  const details=items.map(i=>`🍴 ${i.product} (${i.quantity}g × ${i.count}) — ${formatRupee(i.subtotal)}`).join('<br>');
+  const name = document.getElementById('form_name').value.trim();
+  const email = document.getElementById('email').value.trim();
+  const phone = document.getElementById('phone').value.trim();
+
+  if (!name || !email || !phone) {
+    alert('Please fill Name, Email, and Phone before ordering.');
+    return;
+  }
+  if (items.length === 0) {
+    alert('Please add at least one item to the order.');
+    return;
+  }
+
+  const total = items.reduce((s, i) => s + i.subtotal, 0);
+  let message = `📦 *New Order from ${name}*\n`;
+  message += `----------------------------------------\n`;
+  message += `👤 *Name:* ${name}\n`;
+  message += `📧 *Email:* ${email}\n`;
+  message += `📱 *Phone:* ${phone}\n`;
+  message += `----------------------------------------\n`;
+  message += `🍴 *Order Details:*\n`;
+
+  items.forEach((it) => {
+    message += `🟢 *${it.product}*\n📦 Qty: ${it.quantity} gms × ${it.count}\n💰 Cost: ${formatRupee(it.subtotal)}\n----------------------------------------\n`;
+  });
+
+  message += `🧾 *Total Amount:* ${formatRupee(total)}\n`;
+  message += `🚚 Please confirm availability and delivery details.\n`;
+  message += `🙏 Thank you for ordering from *Mana Ammamma Ruchulu*! ❤️`;
+
+  // ✅ WhatsApp number
+  const whatsappNumber = '919849790312'; // <-- your WhatsApp business number
+  const waUrl = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(message)}`;
+
+  // ✅ Open WhatsApp in SAME tab
+  window.location.href = waUrl;
+
+  // ✅ Popup confirmation
+  setTimeout(() => showPopup(name, phone), 2500);
+}
+
 
   // Admin mail
   emailjs.send("service_25u05y5","template_9wy0hii",{
@@ -1395,6 +1429,31 @@ function closePopup(){
 </script>
 
 <style>
+
+.whatsapp-btn {
+  background: linear-gradient(90deg, #25D366, #128C7E);
+  border: none;
+  color: white;
+  padding: 14px 35px;
+  font-size: 18px;
+  border-radius: 50px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 5px 15px rgba(37, 211, 102, 0.3);
+}
+
+.whatsapp-btn:hover {
+  background: linear-gradient(90deg, #128C7E, #25D366);
+  transform: translateY(-2px);
+  box-shadow: 0 7px 20px rgba(37, 211, 102, 0.4);
+}
+
+.whatsapp-btn i {
+  margin-right: 8px;
+  font-size: 20px;
+}
+
+
 .whatsapp-btn {
   background: linear-gradient(90deg, #25D366, #128C7E);
   color: #fff; border: none; padding: 12px 35px;
