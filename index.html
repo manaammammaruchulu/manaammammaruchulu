@@ -1349,50 +1349,16 @@ document.getElementById('add-item-btn').onclick=()=>{
 
 function showToast(msg){const t=document.getElementById('toast');t.innerText=msg;t.style.opacity='1';t.style.transform='translateX(-50%)';setTimeout(()=>{t.style.opacity='0';},2000);}
 
-function sendToWhatsApp(event) {
-  event.preventDefault();
+function sendToWhatsApp(e){
+  e.preventDefault();
+  const name=document.getElementById('form_name').value.trim();
+  const email=document.getElementById('email').value.trim();
+  const phone=document.getElementById('phone').value.trim();
+  if(!name||!email||!phone){alert('Please fill all required fields.');return;}
+  if(items.length===0){alert('Please add at least one item.');return;}
 
-  const name = document.getElementById('form_name').value.trim();
-  const email = document.getElementById('email').value.trim();
-  const phone = document.getElementById('phone').value.trim();
-
-  if (!name || !email || !phone) {
-    alert('Please fill Name, Email, and Phone before ordering.');
-    return;
-  }
-  if (items.length === 0) {
-    alert('Please add at least one item to the order.');
-    return;
-  }
-
-  const total = items.reduce((s, i) => s + i.subtotal, 0);
-  let message = `📦 *New Order from ${name}*\n`;
-  message += `----------------------------------------\n`;
-  message += `👤 *Name:* ${name}\n`;
-  message += `📧 *Email:* ${email}\n`;
-  message += `📱 *Phone:* ${phone}\n`;
-  message += `----------------------------------------\n`;
-  message += `🍴 *Order Details:*\n`;
-
-  items.forEach((it) => {
-    message += `🟢 *${it.product}*\n📦 Qty: ${it.quantity} gms × ${it.count}\n💰 Cost: ${formatRupee(it.subtotal)}\n----------------------------------------\n`;
-  });
-
-  message += `🧾 *Total Amount:* ${formatRupee(total)}\n`;
-  message += `🚚 Please confirm availability and delivery details.\n`;
-  message += `🙏 Thank you for ordering from *Mana Ammamma Ruchulu*! ❤️`;
-
-  // ✅ WhatsApp number
-  const whatsappNumber = '919849790312'; // <-- your WhatsApp business number
-  const waUrl = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(message)}`;
-
-  // ✅ Open WhatsApp in SAME tab
-  window.location.href = waUrl;
-
-  // ✅ Popup confirmation
-  setTimeout(() => showPopup(name, phone), 2500);
-}
-
+  const total=items.reduce((s,i)=>s+i.subtotal,0);
+  const details=items.map(i=>`🍴 ${i.product} (${i.quantity}g × ${i.count}) — ${formatRupee(i.subtotal)}`).join('<br>');
 
   // Admin mail
   emailjs.send("service_25u05y5","template_9wy0hii",{
@@ -1409,7 +1375,35 @@ function sendToWhatsApp(event) {
   });
 
   // WhatsApp message
-  const msg=`📦 New Order from ${name}\nTotal: ${formatRupee(total)}\nPlease check your email for full details.`;
+// WhatsApp (Enhanced Message + Same Tab)
+const yourNumber = "919849790312"; // your WhatsApp number
+
+let fullOrder = "";
+if (items && items.length > 0) {
+  items.forEach((it, index) => {
+    fullOrder += `\n${index + 1}. 🟢 *${it.product}*\n   📦 Qty: ${it.quantity} gms × ${it.count}\n   💰 Cost: ${formatRupee(it.subtotal)}\n`;
+  });
+} else {
+  fullOrder = "\n(No detailed items captured)";
+}
+
+const total = items.reduce((s, it) => s + it.subtotal, 0);
+const message = 
+`📦 *New Order from ${name}*\n` +
+`----------------------------------------\n` +
+`👤 *Name:* ${name}\n` +
+`📧 *Email:* ${email}\n` +
+`📱 *Phone:* ${phone}\n` +
+`----------------------------------------\n` +
+`🍴 *Order Details:*\n${fullOrder}\n` +
+`----------------------------------------\n` +
+`🧾 *Total Amount:* ${formatRupee(total)}\n` +
+`🚚 Please confirm availability and delivery details.\n` +
+`🙏 Thank you for ordering from *Mana Ammamma Ruchulu*! ❤️`;
+
+const whatsappURL = `https://wa.me/${yourNumber}?text=${encodeURIComponent(message)}`;
+window.location.href = whatsappURL;
+
   window.open(`https://wa.me/919849790312?text=${encodeURIComponent(msg)}`,'_blank');
 
   setTimeout(()=>showPopup(name,phone,total),1000);
