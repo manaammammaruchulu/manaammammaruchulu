@@ -1532,21 +1532,29 @@ function sendToWhatsApp(event) {
   const waUrl = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(msgLines.join('\n'))}`;
   window.location.href = waUrl;
 
-  // ✅ Send Email to Admin
-  emailjs.send("service_25u05y5", "template_9wy0hii", {
-    to_email: "manaammammaruchulu@gmail.com",
-    name, email, phone,
-    totalPrice: total,
-    message: msgLines.join('\n')
-  });
+ // === Admin Email (Full order) ===
+emailjs.send("service_25u05y5", "template_9wy0hii", {
+  to_email: "manaammammaruchulu@gmail.com",
+  subject: "📦 New Order Received – Mana Ammamma Ruchulu",
+  name,
+  email,
+  phone,
+  totalPrice: total,
+  message: msgLines.join('\n')
+});
 
-  // ✅ Send Email to Customer
-  emailjs.send("service_25u05y5", "template_9wy0hii", {
-    to_email: email,
-    name, email, phone,
-    totalPrice: total,
-    message: `Dear ${name},\n\nThank you for your order from *Mana Ammamma Ruchulu*! ❤️\nYour total: ${formatRupee(total)}.\nWe'll contact you on WhatsApp soon.\n\n- Team Mana Ammamma Ruchulu`
-  });
+// === Customer Email (Thank-you) ===
+emailjs.send("service_25u05y5", "template_9wy0hii", {
+  to_email: email,
+  subject: "💚 Thank You for Your Order – Mana Ammamma Ruchulu",
+  name,
+  email,
+  phone,
+  totalPrice: total,
+  message: `Dear ${name},\n\nThank you for your order from *Mana Ammamma Ruchulu*! ❤️
+Your total: ${formatRupee(total)}.
+We'll contact you soon on WhatsApp.\n\n- Team Mana Ammamma Ruchulu`
+});
 
   // ✅ Show Popup after short delay
   setTimeout(() => {
