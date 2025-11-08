@@ -1325,7 +1325,7 @@
 <script src="https://cdn.jsdelivr.net/npm/emailjs-com@3/dist/email.min.js"></script>
 <script>
 (function() {
-  emailjs.init("LPKZRX7B1It83cffY"); // your EmailJS public key
+  emailjs.init("LPKZRX7B1It83cffY"); // Your EmailJS Public Key
 })();
 
 const productPrices = {
@@ -1489,9 +1489,7 @@ function updateTotal() {
   totalPriceEl.innerText = 'Total Price: ' + formatRupee(total);
 }
 
-// -----------------------
-// WhatsApp + EmailJS + Popup Integration
-// -----------------------
+// ✅ WhatsApp + EmailJS + Popup Integration
 function sendToWhatsApp(event) {
   event.preventDefault();
 
@@ -1508,57 +1506,40 @@ function sendToWhatsApp(event) {
     return;
   }
 
-  let msgLines = [];
-  msgLines.push(`📦 *New Order from ${name} (Mana Ammamma Ruchulu)*`);
-  msgLines.push('----------------------------------------');
-  msgLines.push(`👤 *Name:* ${name}`);
-  msgLines.push(`📧 *Email:* ${email}`);
-  msgLines.push(`📱 *Phone:* ${phone}`);
-  msgLines.push('----------------------------------------');
-  msgLines.push('🍴 *Order Details:*');
-
-  items.forEach(it => {
-    msgLines.push(`🟢 *Item:* ${it.product}\n📦 *Qty:* ${it.quantity} gms × ${it.count}\n💰 *Cost:* ${formatRupee(it.subtotal)}`);
-    msgLines.push('----------------------------------------');
-  });
-
   const total = items.reduce((s, it) => s + it.subtotal, 0);
-  msgLines.push(`🧾 *Total Amount:* ${formatRupee(total)}`);
-  msgLines.push('🚚 Please confirm availability and delivery details.');
-  msgLines.push('🙏 Thank you for ordering from *Mana Ammamma Ruchulu*! ❤️');
 
-  // ✅ Open WhatsApp in same tab
+  // === Message formatting ===
+  const orderDetails = items.map(it => 
+    `• ${it.product} (${it.quantity} gms × ${it.count}) - ${formatRupee(it.subtotal)}`
+  ).join('\n');
+
+  const adminMsg = `📦 *New Order from ${name}*\n----------------------------------------\n👤 Name: ${name}\n📧 Email: ${email}\n📱 Phone: ${phone}\n----------------------------------------\n🍴 Order Details:\n${orderDetails}\n----------------------------------------\n🧾 Total: ${formatRupee(total)}\n\n– Mana Ammamma Ruchulu`;
+
+  const customerMsg = `Dear ${name},\n\nThank you for your order from Mana Ammamma Ruchulu! ❤️\n\nYour order details:\n${orderDetails}\n----------------------------------------\nTotal: ${formatRupee(total)}\n\nWe'll contact you soon on WhatsApp (${phone}).\n\n– Team Mana Ammamma Ruchulu`;
+
+  // ✅ Open WhatsApp (same tab)
   const whatsappNumber = '919849790312';
-  const waUrl = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(msgLines.join('\n'))}`;
+  const waUrl = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(adminMsg)}`;
   window.location.href = waUrl;
 
- // === Send email to COMPANY (Admin) ===
-emailjs.send("service_25u05y5", "template_9wy0hii", {
-  to_email: "manaammammaruchulu@gmail.com",
-  subject: `Contact Us – ${name} – New Order`,
-  name,
-  email,
-  phone,
-  totalPrice: total,
-  message: `📦 *New Order Received from ${name}*\n----------------------------------------\n👤 Name: ${name}\n📧 Email: ${email}\n📱 Phone: ${phone}\n----------------------------------------\n🍴 Order Details:\n${items.map(it => `• ${it.product} (${it.quantity} gms × ${it.count}) - ₹${it.subtotal}`).join('\n')}\n----------------------------------------\n🧾 Total: ₹${total}\n🚚 Please confirm availability.\n\nMana Ammamma Ruchulu`
-});
+  // ✅ Send Email to Company
+  emailjs.send("service_25u05y5", "template_9wy0hii", {
+    to_email: "manaammammaruchulu@gmail.com",
+    subject: `Contact Us – ${name} – New Order`,
+    name, email, phone,
+    message: adminMsg
+  });
 
-// === Send confirmation email to CUSTOMER ===
-emailjs.send("service_25u05y5", "template_9wy0hii", {
-  to_email: email,
-  subject: `Mana Ammamma Ruchulu – Order Confirmation`,
-  name,
-  email,
-  phone,
-  totalPrice: total,
-  message: `Dear ${name},\n\nThank you for ordering from Mana Ammamma Ruchulu! ❤️\n\nHere are your order details:\n${items.map(it => `• ${it.product} (${it.quantity} gms × ${it.count}) - ₹${it.subtotal}`).join('\n')}\n----------------------------------------\nTotal: ₹${total}\n\nWe'll contact you on WhatsApp soon for delivery confirmation.\n\n– Team Mana Ammamma Ruchulu`
-});
+  // ✅ Send Email to Customer
+  emailjs.send("service_25u05y5", "template_9wy0hii", {
+    to_email: email,
+    subject: `Mana Ammamma Ruchulu – Order Confirmation`,
+    name, email, phone,
+    message: customerMsg
+  });
 
-
-  // ✅ Show Popup after short delay
-  setTimeout(() => {
-    showPopup(name, phone);
-  }, 2500);
+  // ✅ Show Popup after 2.5 seconds
+  setTimeout(() => showPopup(name, phone), 2500);
 }
 
 function showPopup(name, phone) {
@@ -1576,7 +1557,7 @@ function showPopup(name, phone) {
 
 function closePopup() {
   document.getElementById('popup').style.display = 'none';
-  location.reload(); // ✅ Refresh after closing popup
+  location.reload(); // refresh page
 }
 </script>
 
