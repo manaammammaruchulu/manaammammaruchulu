@@ -1272,19 +1272,38 @@
             </div>
 
             <!-- Order Summary (Hidden initially) -->
-            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12" style="margin-top:15px; display:none;" id="order-summary-wrapper">
-              <div id="order-summary" style="border:1px solid #e6e6e6; padding:14px; border-radius:8px; background:#fff;">
-                <h5 style="margin:0 0 8px 0; text-align:center;">🍴 <strong>Order Summary</strong></h5>
+           <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12" style="margin-top:15px; display:none;" id="order-summary-wrapper">
+            <div id="order-summary" style="
+                border: 2px solid #f3e5b2;
+                padding: 16px;
+                border-radius: 12px;
+                background: #fffef8;
+                box-shadow: 0 4px 10px rgba(209,125,0,0.08);
+            ">
+                <h5 style="margin: 0 0 10px 0; text-align: center; color: #d17d00; font-weight: 700;">
+                🍴 <strong>Order Summary</strong>
+                </h5>
                 <div id="items-container" style="min-height:40px;">
-                  <p style="text-align:center; color:#888; margin:12px 0;">No items added yet.</p>
+                <p style="text-align:center; color:#888; margin:12px 0;">No items added yet.</p>
                 </div>
-              </div>
+            </div>
             </div>
 
-            <!-- Total Price (Hidden initially) -->
+            <!-- Total Price -->
             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12" style="margin-top:12px; display:none;" id="total-price-wrapper">
-              <p id="total-price" style="font-weight:bold; font-size:18px; text-align:center; margin-bottom:15px;">Total Price: ₹0</p>
+            <p id="total-price" style="
+                font-weight:bold;
+                font-size:18px;
+                text-align:center;
+                margin-bottom:15px;
+                background:#fffef8;
+                border:2px dashed #d17d00;
+                border-radius:10px;
+                padding:10px 0;
+                color:#d17d00;
+            ">Total Price: ₹0</p>
             </div>
+
 
             <!-- WhatsApp Order Button -->
             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
@@ -1449,7 +1468,7 @@ function sendToWhatsApp(event) {
   ).join('\n');
 
   const message = 
-`📦 *New Order Received – Mana Ammamma Ruchulu*
+`📦 *New Order Received from ${name} (Mana Ammamma Ruchulu)*
 ────────────────────────────
 👤 *Name:* ${name}
 📧 *Email:* ${email}
@@ -1467,17 +1486,32 @@ ${orderDetails}
 
   // ✅ Send email to shop
   emailjs.send("service_25u05y5", "template_9wy0hii", {
-    to_email: "manaammammaruchulu@gmail.com",
-    name, email, phone,
-    message_html: message
-  });
+  to_email: "manaammammaruchulu@gmail.com",
+  name, email, phone,
+  message_html: `
+  <div style="font-family:Arial,sans-serif; background:#fffef8; padding:18px; border-radius:10px; border:1px solid #f3e5b2; max-width:700px; margin:auto;">
+    <h2 style="color:#d17d00;">📦 New Order from ${name}</h2>
+    <p>📧 ${email}<br>📱 ${phone}</p>
+    <hr style="border:1px dashed #e5c07b;">
+    <div>${orderDetails.replace(/\n/g, '<br>')}</div>
+    <h3 style="color:#d17d00;">🧾 Total: ${formatRupee(total)}</h3>
+  </div>`
+});
 
   // ✅ Send confirmation email to customer
-  emailjs.send("service_25u05y5", "template_9wy0hii", {
-    to_email: email,
-    name, email, phone,
-    message_html: `Dear ${name},<br><br>Thank you for your order from <b>Mana Ammamma Ruchulu!</b> 💚<br><br>${orderDetails.replace(/\n/g, '<br>')}<br><br><b>Total:</b> ${formatRupee(total)}<br><br>We’ll contact you shortly on WhatsApp (${phone}).`
-  });
+ emailjs.send("service_25u05y5", "template_9wy0hii", {
+  to_email: email,
+  name, email, phone,
+  message_html: `
+  <div style="font-family:Arial,sans-serif; background:#f9fff8; padding:18px; border-radius:10px; border:1px solid #b7edc2; max-width:700px; margin:auto;">
+    <h2 style="color:#128C7E;">💚 Thank You, ${name}!</h2>
+    <p>Your order from <b>Mana Ammamma Ruchulu</b> has been received successfully.</p>
+    <div style="margin:15px 0;">${orderDetails.replace(/\n/g, '<br>')}</div>
+    <h3 style="color:#128C7E;">🧾 Total: ${formatRupee(total)}</h3>
+    <p>We’ll contact you soon on WhatsApp <b>${phone}</b>.</p>
+  </div>`
+});
+
 
   // ✅ Show confirmation popup
   setTimeout(() => showPopup(name, phone, total), 1500);
@@ -1503,6 +1537,20 @@ function closePopup() {
   items = [];
   renderItems();
 }
+
+#order-summary {
+  background: #fffef8;              /* soft beige background */
+  border: 2px solid #f3e5b2;        /* golden-beige border */
+  border-radius: 12px;
+  padding: 16px;
+  box-shadow: 0 3px 10px rgba(0,0,0,0.05);
+}
+
+#order-summary h5 {
+  color: #d17d00;
+}
+
+
 </script>
 
 
