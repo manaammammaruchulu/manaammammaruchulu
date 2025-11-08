@@ -1543,24 +1543,29 @@ emailjs.send("service_25u05y5", "template_9wy0hii", {
   message: msgLines.join('\n')
 });
 
-// === Customer Email (Thank-you) ===
+
+// === Send email to COMPANY (Admin) ===
 emailjs.send("service_25u05y5", "template_9wy0hii", {
-  to_email: email,
-  subject: "💚 Thank You for Your Order – Mana Ammamma Ruchulu",
+  to_email: "manaammammaruchulu@gmail.com",
+  subject: `Contact Us – ${name} – New Order`,
   name,
   email,
   phone,
   totalPrice: total,
-  message: `Dear ${name},\n\nThank you for your order from *Mana Ammamma Ruchulu*! ❤️
-Your total: ${formatRupee(total)}.
-We'll contact you soon on WhatsApp.\n\n- Team Mana Ammamma Ruchulu`
+  message: `📦 *New Order Received from ${name}*\n----------------------------------------\n👤 Name: ${name}\n📧 Email: ${email}\n📱 Phone: ${phone}\n----------------------------------------\n🍴 Order Details:\n${items.map(it => `• ${it.product} (${it.quantity} gms × ${it.count}) - ₹${it.subtotal}`).join('\n')}\n----------------------------------------\n🧾 Total: ₹${total}\n🚚 Please confirm availability.\n\nMana Ammamma Ruchulu`
 });
 
-  // ✅ Show Popup after short delay
-  setTimeout(() => {
-    showPopup(name, phone);
-  }, 2500);
-}
+// === Send confirmation email to CUSTOMER ===
+emailjs.send("service_25u05y5", "template_9wy0hii", {
+  to_email: email,
+  subject: `Mana Ammamma Ruchulu – Order Confirmation`,
+  name,
+  email,
+  phone,
+  totalPrice: total,
+  message: `Dear ${name},\n\nThank you for ordering from Mana Ammamma Ruchulu! ❤️\n\nHere are your order details:\n${items.map(it => `• ${it.product} (${it.quantity} gms × ${it.count}) - ₹${it.subtotal}`).join('\n')}\n----------------------------------------\nTotal: ₹${total}\n\nWe'll contact you on WhatsApp soon for delivery confirmation.\n\n– Team Mana Ammamma Ruchulu`
+});
+
 
 function showPopup(name, phone) {
   const popup = document.getElementById('popup');
