@@ -1357,7 +1357,31 @@ function sendToWhatsApp(e){
   if(!name||!email||!phone){alert('Please fill all required fields.');return;}
   if(items.length===0){alert('Please add at least one item.');return;}
 
-  const total=items.reduce((s,i)=>s+i.subtotal,0);
+  
+ const total=items.reduce((s,i)=>s+i.subtotal,0);
+  let msgLines=[];
+  msgLines.push(`📦 *New Order from ${name}*`);
+  msgLines.push('----------------------------------------');
+  msgLines.push(`👤 *Name:* ${name}`);
+  msgLines.push(`📧 *Email:* ${email}`);
+  msgLines.push(`📱 *Phone:* ${phone}`);
+  msgLines.push('----------------------------------------');
+  msgLines.push('🍴 *Order Details:*');
+
+  items.forEach(it=>{
+    msgLines.push(`🟢 ${it.product} (${it.quantity}g × ${it.count}) - ${formatRupee(it.subtotal)}`);
+  });
+
+  msgLines.push('----------------------------------------');
+  msgLines.push(`🧾 *Total Amount:* ${formatRupee(total)}`);
+  msgLines.push('🙏 Thank you for ordering from *Mana Ammamma Ruchulu*! ❤️');
+  msgLines.push('We’ll contact you shortly to confirm delivery.');
+
+  const whatsappText=encodeURIComponent(msgLines.join('\n'));
+  const whatsappNumber='919849790312'; // your business number
+  const whatsappURL=`https://wa.me/${whatsappNumber}?text=${whatsappText}`;
+  window.open(whatsappURL,'_blank');
+
   const details=items.map(i=>`🍴 ${i.product} (${i.quantity}g × ${i.count}) — ${formatRupee(i.subtotal)}`).join('<br>');
 
   // Admin mail
@@ -1375,7 +1399,6 @@ function sendToWhatsApp(e){
   });
 
   // WhatsApp message
-  const msg=`📦 New Order from ${name}\nTotal: ${formatRupee(total)}\nPlease check your email for full details.`;
   window.open(`https://wa.me/919849790312?text=${encodeURIComponent(msg)}`,'_blank');
 
   setTimeout(()=>showPopup(name,phone,total),1000);
