@@ -1321,6 +1321,7 @@
   Item quantity updated 🛒
 </div>
 
+
 <script src="https://cdn.jsdelivr.net/npm/emailjs-com@3/dist/email.min.js"></script>
 <script>
 (function() {
@@ -1383,12 +1384,26 @@ function renderItems() {
     itemDiv.style.display = 'flex';
     itemDiv.style.justifyContent = 'space-between';
     itemDiv.style.alignItems = 'center';
-    itemDiv.style.padding = '8px 6px';
-    itemDiv.style.borderBottom = '1px dashed #eee';
+    itemDiv.style.padding = '10px 12px';
+    itemDiv.style.border = '1px solid #dff3e0';
+    itemDiv.style.borderRadius = '10px';
+    itemDiv.style.marginBottom = '8px';
+    itemDiv.style.background = '#f8fff9';
+    itemDiv.style.transition = '0.3s';
+    itemDiv.onmouseover = () => {
+      itemDiv.style.background = '#eaffea';
+      itemDiv.style.boxShadow = '0 3px 10px rgba(37,211,102,0.15)';
+      itemDiv.style.transform = 'translateY(-2px)';
+    };
+    itemDiv.onmouseout = () => {
+      itemDiv.style.background = '#f8fff9';
+      itemDiv.style.boxShadow = 'none';
+      itemDiv.style.transform = 'none';
+    };
 
     const left = document.createElement('div');
     left.style.maxWidth = '65%';
-    left.innerHTML = `<strong style="font-size:14px;">${it.product}</strong>
+    left.innerHTML = `<strong style="font-size:14px; color:#128C7E;">${it.product}</strong>
                       <div style="color:#555; font-size:13px; margin-top:4px;">Qty: ${it.quantity} gms</div>`;
 
     const right = document.createElement('div');
@@ -1420,20 +1435,15 @@ function renderItems() {
     btnRemove.style.border = 'none';
     btnRemove.style.cursor = 'pointer';
 
-    controls.appendChild(btnMinus);
-    controls.appendChild(countSpan);
-    controls.appendChild(btnPlus);
-    controls.appendChild(btnRemove);
+    controls.append(btnMinus, countSpan, btnPlus, btnRemove);
 
     const priceDiv = document.createElement('div');
     priceDiv.style.fontWeight = '700';
     priceDiv.style.marginTop = '4px';
     priceDiv.innerText = formatRupee(it.subtotal);
 
-    right.appendChild(controls);
-    right.appendChild(priceDiv);
-    itemDiv.appendChild(left);
-    itemDiv.appendChild(right);
+    right.append(controls, priceDiv);
+    itemDiv.append(left, right);
     itemsContainer.appendChild(itemDiv);
   });
 
@@ -1453,9 +1463,7 @@ addItemBtn.addEventListener('click', () => {
     existing.subtotal = computeSubtotal(existing.product, existing.quantity, existing.count);
     showToast(`Added another ${existing.product} (${existing.quantity} gms)`);
   } else {
-    items.push({
-      id: itemIdCounter++, product, quantity, count: 1, subtotal: computeSubtotal(product, quantity, 1)
-    });
+    items.push({ id: itemIdCounter++, product, quantity, count: 1, subtotal: computeSubtotal(product, quantity, 1) });
   }
   productSelect.selectedIndex = 0;
   quantitySelect.selectedIndex = 0;
@@ -1519,12 +1527,12 @@ function sendToWhatsApp(event) {
   msgLines.push('🚚 Please confirm availability and delivery details.');
   msgLines.push('🙏 Thank you for ordering from *Mana Ammamma Ruchulu*! ❤️');
 
-  // Open WhatsApp (new tab)
+  // ✅ Open WhatsApp in same tab
   const whatsappNumber = '919849790312';
   const waUrl = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(msgLines.join('\n'))}`;
-  window.open(waUrl, '_blank');
+  window.location.href = waUrl;
 
-  // Send email to Admin
+  // ✅ Send Email to Admin
   emailjs.send("service_25u05y5", "template_9wy0hii", {
     to_email: "manaammammaruchulu@gmail.com",
     name, email, phone,
@@ -1532,7 +1540,7 @@ function sendToWhatsApp(event) {
     message: msgLines.join('\n')
   });
 
-  // Send confirmation to Customer
+  // ✅ Send Email to Customer
   emailjs.send("service_25u05y5", "template_9wy0hii", {
     to_email: email,
     name, email, phone,
@@ -1540,8 +1548,10 @@ function sendToWhatsApp(event) {
     message: `Dear ${name},\n\nThank you for your order from *Mana Ammamma Ruchulu*! ❤️\nYour total: ${formatRupee(total)}.\nWe'll contact you on WhatsApp soon.\n\n- Team Mana Ammamma Ruchulu`
   });
 
-  // Show Popup
-  showPopup(name, phone);
+  // ✅ Show Popup after short delay
+  setTimeout(() => {
+    showPopup(name, phone);
+  }, 2500);
 }
 
 function showPopup(name, phone) {
@@ -1559,10 +1569,7 @@ function showPopup(name, phone) {
 
 function closePopup() {
   document.getElementById('popup').style.display = 'none';
-  document.getElementById('order-form').reset();
-  document.getElementById('total-price').innerText = 'Total Price: ₹0';
-  items = [];
-  renderItems();
+  location.reload(); // ✅ Refresh after closing popup
 }
 </script>
 
