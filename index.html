@@ -1181,164 +1181,240 @@
    <!--  </div> -->
     <!-- end pricing-main -->
 
-    <!-- === Order Summary === -->
-<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12" style="margin-top:15px; display:none;" id="order-summary-wrapper">
-  <div id="order-summary" style="
-    border:2px solid #f3e5b2;
-    padding:16px;
-    border-radius:12px;
-    background:#fffef8;
-    box-shadow:0 4px 10px rgba(209,125,0,0.08);
-  ">
-    <h5 style="margin:0 0 10px 0; text-align:center; color:#d17d00; font-weight:700;">
-      🍴 <strong>Order Summary</strong>
-    </h5>
-    <div id="items-container" style="min-height:40px;">
-      <p style="text-align:center; color:#888; margin:12px 0;">No items added yet.</p>
+
+<!-- === Start: Order section === -->
+
+<!-- === Start: Order section === -->
+<div id="order" class="reservations-main pad-top-100 pad-bottom-100">
+  <div class="container">
+    <div class="row">
+      <div class="form-reservations-box">
+        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+          <div class="wow fadeIn" data-wow-duration="1s" data-wow-delay="0.1s">
+            <h2 class="block-title text-center">Order</h2>
+          </div>
+          <h4 class="form-title">ORDER FORM</h4>
+          <p>Please fill out all required * fields. Thanks!</p>
+
+          <form id="order-form" class="reservations-box" onsubmit="sendToWhatsApp(event)">
+            <!-- Customer Info -->
+            <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+              <div class="form-box">
+                <input type="text" name="form_name" id="form_name" placeholder="Name" required>
+              </div>
+            </div>
+
+            <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+              <div class="form-box">
+                <input type="email" name="email" id="email" placeholder="Email" required>
+              </div>
+            </div>
+
+            <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+              <div class="form-box">
+                <input type="text" name="phone" id="phone" placeholder="Contact No." required>
+              </div>
+            </div>
+
+            <!-- Product & Quantity -->
+            <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+              <div class="form-box">
+                <select name="product" id="product" class="selectpicker">
+                  <option selected disabled>Select Product</option>
+                  <optgroup label="Chicken Pickles">
+                    <option>Chicken Bone Pickle</option>
+                    <option>Boneless Chicken Pickle</option>
+                    <option>Tokku Chicken Pickle</option>
+                    <option>Gongura Chicken Pickle</option>
+                    <option>Mango Chicken Pickle</option>
+                    <option>Natukodi Pickle</option>
+                  </optgroup>
+                  <optgroup label="Mutton Pickles">
+                    <option>Mutton Bone Pickle</option>
+                    <option>Mutton Tokku Pickle</option>
+                    <option>Mutton Boneless Pickle</option>
+                    <option>Mutton Gongura Pickle</option>
+                  </optgroup>
+                  <optgroup label="Seafood Pickles">
+                    <option>Fish Pickle</option>
+                    <option>Koramenu Fish Pickle</option>
+                    <option>Prawns Pickle</option>
+                    <option>Gongura Prawn Pickle</option>
+                    <option>Mango Prawn Pickle</option>
+                  </optgroup>
+                  <optgroup label="Podi / Powders">
+                    <option>Kandi Podi</option>
+                    <option>Munagaku Podi</option>
+                    <option>Karam Podi</option>
+                    <option>Chilli Powder</option>
+                    <option>Karivepaku Podi</option>
+                    <option>Garlic Karam Podi</option>
+                  </optgroup>
+                </select>
+              </div>
+            </div>
+
+            <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+              <div class="form-box">
+                <select name="quantity" id="quantity" class="selectpicker">
+                  <option selected disabled>Select Quantity</option>
+                  <option value="250">250 gms</option>
+                  <option value="500">500 gms</option>
+                  <option value="750">750 gms</option>
+                  <option value="1000">1 Kg</option>
+                </select>
+              </div>
+            </div>
+
+            <!-- Add Item -->
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12" style="margin-top:10px;">
+              <div class="reserve-book-btn text-left" style="padding-left:15px;">
+                <button id="add-item-btn" class="whatsapp-btn" type="button">➕ Add Item</button>
+              </div>
+            </div>
+
+            <!-- Order Summary -->
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12" style="margin-top:15px; display:none;" id="order-summary-wrapper">
+              <div id="order-summary" style="border:2px solid #f3e5b2; padding:14px; border-radius:10px; background:#fffef8;">
+                <h5 style="margin:0 0 8px 0; text-align:center; color:#d17d00;">🍴 <strong>Order Summary</strong></h5>
+                <div id="items-container" style="min-height:40px;">
+                  <p style="text-align:center; color:#888;">No items added yet.</p>
+                </div>
+              </div>
+            </div>
+
+            <!-- Total -->
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12" style="margin-top:12px; display:none;" id="total-price-wrapper">
+              <p id="total-price" style="font-weight:bold; font-size:18px; text-align:center; color:#d17d00; background:#fffef8; border:2px dashed #f3e5b2; border-radius:10px; padding:10px;">Total Price: ₹0</p>
+            </div>
+
+            <!-- Submit -->
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 text-center">
+              <button class="whatsapp-btn" type="submit"><i class="fa fa-whatsapp"></i> Order on WhatsApp</button>
+            </div>
+          </form>
+        </div>
+      </div>
     </div>
   </div>
 </div>
 
-<!-- Total Price -->
-<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12" style="margin-top:12px; display:none;" id="total-price-wrapper">
-  <p id="total-price" style="
-    font-weight:bold;
-    font-size:18px;
-    text-align:center;
-    margin-bottom:15px;
-    background:#fffef8;
-    border:2px dashed #d17d00;
-    border-radius:10px;
-    padding:10px 0;
-    color:#d17d00;
-  ">Total Price: ₹0</p>
-</div>
+<!-- Popup -->
+<div id="popup" class="popup-overlay"></div>
 
-<!-- === JS Section === -->
+<!-- Toast -->
+<div id="toast" style="position:fixed;bottom:20px;left:50%;transform:translateX(-50%) translateY(50px);background:#25d366;color:#fff;padding:10px 18px;border-radius:30px;font-weight:600;opacity:0;transition:all 0.4s ease;z-index:9999;box-shadow:0 3px 10px rgba(0,0,0,0.2);">Item added 🛒</div>
+
 <script src="https://cdn.jsdelivr.net/npm/emailjs-com@3/dist/email.min.js"></script>
 <script>
-(function() {
-  emailjs.init("LPKZRX7B1It83cffY");
-})();
+(function() { emailjs.init("LPKZRX7B1It83cffY"); })();
 
 const productPrices = {
-  "Chicken Bone Pickle": 250,"Boneless Chicken Pickle": 270,"Tokku Chicken Pickle": 260,"Gongura Chicken Pickle": 270,"Mango Chicken Pickle": 280,"Natukodi Pickle": 300,
-  "Mutton Bone Pickle": 300,"Mutton Tokku Pickle": 320,"Mutton Boneless Pickle": 350,"Mutton Gongura Pickle": 340,
-  "Fish Pickle": 280,"Koramenu Fish Pickle": 290,"Prawns Pickle": 400,"Gongura Prawn Pickle": 360,"Mango Prawn Pickle": 370,
-  "Kandi Podi": 120,"Munagaku Podi": 120,"Karam Podi": 120,"Chilli Powder": 120,"Karivepaku Podi": 120,"Garlic Karam Podi": 120
+  "Chicken Bone Pickle":250,"Boneless Chicken Pickle":270,"Tokku Chicken Pickle":260,"Gongura Chicken Pickle":270,"Mango Chicken Pickle":280,"Natukodi Pickle":300,
+  "Mutton Bone Pickle":300,"Mutton Tokku Pickle":320,"Mutton Boneless Pickle":350,"Mutton Gongura Pickle":340,
+  "Fish Pickle":280,"Koramenu Fish Pickle":290,"Prawns Pickle":400,"Gongura Prawn Pickle":360,"Mango Prawn Pickle":370,
+  "Kandi Podi":120,"Munagaku Podi":120,"Karam Podi":120,"Chilli Powder":120,"Karivepaku Podi":120,"Garlic Karam Podi":120
 };
 
-let items = [];
-let itemIdCounter = 1;
-
-function formatRupee(n){return '₹'+Number(n).toLocaleString('en-IN',{maximumFractionDigits:0});}
-
-function computeSubtotal(product,quantity,count){
-  const base=productPrices[product]||0;
-  return (quantity/250)*base*count;
-}
+let items=[]; let itemId=1;
+function formatRupee(n){return '₹'+Number(n).toLocaleString('en-IN');}
+function computeSubtotal(p,q,c){const b=productPrices[p]||0;return (q/250)*b*c;}
 
 function renderItems(){
-  const orderSummaryWrapper=document.getElementById('order-summary-wrapper');
-  const totalPriceWrapper=document.getElementById('total-price-wrapper');
-  const itemsContainer=document.getElementById('items-container');
-  const totalPriceEl=document.getElementById('total-price');
-  if(items.length===0){
-    itemsContainer.innerHTML='<p style="text-align:center; color:#888; margin:12px 0;">No items added yet.</p>';
-    totalPriceEl.innerText='Total Price: ₹0';
-    orderSummaryWrapper.style.display='none';
-    totalPriceWrapper.style.display='none';
-    return;
-  }
-  orderSummaryWrapper.style.display='block';
-  totalPriceWrapper.style.display='block';
-  itemsContainer.innerHTML='';
+  const wrap=document.getElementById('order-summary-wrapper');
+  const totalWrap=document.getElementById('total-price-wrapper');
+  const container=document.getElementById('items-container');
+  const totalEl=document.getElementById('total-price');
+  if(items.length===0){container.innerHTML='<p style="text-align:center;color:#888;">No items added yet.</p>';wrap.style.display='none';totalWrap.style.display='none';return;}
+  wrap.style.display='block';totalWrap.style.display='block';container.innerHTML='';
   items.forEach(it=>{
     const div=document.createElement('div');
-    div.style.cssText='display:flex;justify-content:space-between;align-items:center;padding:8px 6px;border-bottom:1px dashed #eee;';
-    div.innerHTML=`<div><strong>${it.product}</strong><div style="color:#555;font-size:13px;">Qty: ${it.quantity} gms × ${it.count}</div></div>
-                   <div style="font-weight:700;">${formatRupee(it.subtotal)}</div>`;
-    itemsContainer.appendChild(div);
+    div.style='display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px dashed #eee;';
+    div.innerHTML=`<div><strong>${it.product}</strong><div style="font-size:13px;color:#555;">Qty: ${it.quantity} g × ${it.count}</div></div><div style="font-weight:700;">${formatRupee(it.subtotal)}</div>`;
+    container.appendChild(div);
   });
-  const total=items.reduce((s,it)=>s+it.subtotal,0);
-  totalPriceEl.innerText='Total Price: '+formatRupee(total);
+  totalEl.innerText='Total Price: '+formatRupee(items.reduce((s,it)=>s+it.subtotal,0));
 }
 
-function addItem(){
-  const product=document.getElementById('product').value;
-  const quantity=parseInt(document.getElementById('quantity').value);
-  if(!product||isNaN(quantity)){alert('Please select valid product and quantity');return;}
-  const existing=items.find(it=>it.product===product&&it.quantity===quantity);
-  if(existing){existing.count++;existing.subtotal=computeSubtotal(existing.product,existing.quantity,existing.count);}
-  else{items.push({id:itemIdCounter++,product,quantity,count:1,subtotal:computeSubtotal(product,quantity,1)});}
+document.getElementById('add-item-btn').onclick=()=>{
+  const p=document.getElementById('product').value;
+  const q=parseInt(document.getElementById('quantity').value);
+  if(!p||isNaN(q)){alert('Select valid product and quantity.');return;}
+  const exist=items.find(i=>i.product===p&&i.quantity===q);
+  if(exist){exist.count++;exist.subtotal=computeSubtotal(p,q,exist.count);}
+  else{items.push({id:itemId++,product:p,quantity:q,count:1,subtotal:computeSubtotal(p,q,1)});}
   renderItems();
-}
-document.getElementById('add-item-btn').addEventListener('click',addItem);
+  showToast(`Added ${p} (${q}g)`);
+};
 
-// === Send Order ===
-function sendToWhatsApp(event){
-  event.preventDefault();
+function showToast(msg){const t=document.getElementById('toast');t.innerText=msg;t.style.opacity='1';t.style.transform='translateX(-50%)';setTimeout(()=>{t.style.opacity='0';},2000);}
+
+function sendToWhatsApp(e){
+  e.preventDefault();
   const name=document.getElementById('form_name').value.trim();
   const email=document.getElementById('email').value.trim();
   const phone=document.getElementById('phone').value.trim();
   if(!name||!email||!phone){alert('Please fill all required fields.');return;}
   if(items.length===0){alert('Please add at least one item.');return;}
 
-  const total=items.reduce((s,it)=>s+it.subtotal,0);
-  const orderDetails=items.map(it=>`🍴 ${it.product} (${it.quantity}g × ${it.count}) — ${formatRupee(it.subtotal)}`).join('<br>');
+  const total=items.reduce((s,i)=>s+i.subtotal,0);
+  const details=items.map(i=>`🍴 ${i.product} (${i.quantity}g × ${i.count}) — ${formatRupee(i.subtotal)}`).join('<br>');
 
-  // ✅ Admin HTML Email
-  const adminHTML=`<div style="font-family:Arial,sans-serif;background:#fffef8;padding:18px;border-radius:10px;border:1px solid #f3e5b2;max-width:700px;margin:auto;">
-  <h2 style="color:#d17d00;">📦 New Order from ${name}</h2>
-  <p>📧 ${email}<br>📱 ${phone}</p>
-  <hr style="border:1px dashed #e5c07b;">
-  <div>${orderDetails}</div>
-  <h3 style="color:#d17d00;">🧾 Total: ${formatRupee(total)}</h3>
-  </div>`;
-
-  // ✅ Customer HTML Email
-  const customerHTML=`<div style="font-family:Arial,sans-serif;background:#f9fff8;padding:18px;border-radius:10px;border:1px solid #b7edc2;max-width:700px;margin:auto;">
-  <h2 style="color:#128C7E;">💚 Thank You, ${name}!</h2>
-  <p>Your order from <b>Mana Ammamma Ruchulu</b> has been received successfully.</p>
-  <div>${orderDetails}</div>
-  <h3 style="color:#128C7E;">🧾 Total: ${formatRupee(total)}</h3>
-  <p>We’ll contact you soon on WhatsApp <b>${phone}</b>.</p>
-  </div>`;
-
-  // ✅ Send Email (Admin)
+  // Admin mail
   emailjs.send("service_25u05y5","template_9wy0hii",{
     to_email:"manaammammaruchulu@gmail.com",
-    name,email,phone,message_html:adminHTML
+    name,email,phone,
+    message_html:`<div style="font-family:Arial;background:#fffef8;padding:18px;border:1px solid #f3e5b2;border-radius:10px;"><h2 style="color:#d17d00;">📦 New Order from ${name}</h2><p>📧 ${email}<br>📱 ${phone}</p><hr style="border:1px dashed #f3e5b2;">${details}<h3 style="color:#d17d00;">🧾 Total: ${formatRupee(total)}</h3></div>`
   });
 
-  // ✅ Send Email (Customer)
+  // Customer mail
   emailjs.send("service_25u05y5","template_9wy0hii",{
     to_email:email,
-    name,email,phone,message_html:customerHTML
+    name,email,phone,
+    message_html:`<div style="font-family:Arial;background:#f9fff8;padding:18px;border:1px solid #b7edc2;border-radius:10px;"><h2 style="color:#128C7E;">💚 Thank You, ${name}!</h2><p>Your order from <b>Mana Ammamma Ruchulu</b> has been received successfully.</p>${details}<h3 style="color:#128C7E;">🧾 Total: ${formatRupee(total)}</h3><p>We’ll contact you soon on WhatsApp <b>${phone}</b>.</p></div>`
   });
 
-  // ✅ WhatsApp Message
-  const whatsappNumber='919849790312';
-  const waText=`📦 New Order from ${name}\nTotal: ${formatRupee(total)}\nPlease check your email for details.`;
-  window.open(`https://wa.me/${whatsappNumber}?text=${encodeURIComponent(waText)}`,'_blank');
+  // WhatsApp message
+  const msg=`📦 New Order from ${name}\nTotal: ${formatRupee(total)}\nPlease check your email for full details.`;
+  window.open(`https://wa.me/919849790312?text=${encodeURIComponent(msg)}`,'_blank');
 
-  // ✅ Popup
-  setTimeout(()=>showPopup(name,phone,total),1500);
+  setTimeout(()=>showPopup(name,phone,total),1000);
 }
 
 function showPopup(name,phone,total){
-  const popup=document.getElementById('popup');
-  popup.innerHTML=`<div class="popup-content"><h3>🎉 Thank You, ${name}!</h3><p>Your order has been placed successfully.</p><p>We’ll contact you on WhatsApp <b>${phone}</b>.</p><p><b>Total:</b> ${formatRupee(total)}</p><button onclick="closePopup()">OK</button></div>`;
-  popup.style.display='flex';
+  const p=document.getElementById('popup');
+  p.innerHTML=`<div class="popup-content" style="background:#fffef8;border:2px solid #f3e5b2;border-radius:15px;padding:30px;text-align:center;"><h3 style="color:#d17d00;">🎉 Thank You, ${name}!</h3><p>Your order has been placed successfully.</p><p>We’ll contact you shortly on WhatsApp <b>${phone}</b>.</p><p><b>Total:</b> ${formatRupee(total)}</p><button onclick="closePopup()">OK</button></div>`;
+  p.style.display='flex';
 }
 function closePopup(){
-  document.getElementById('popup').style.display='none';
+  const p=document.getElementById('popup');
+  p.style.display='none';
   document.getElementById('order-form').reset();
-  document.getElementById('total-price').innerText='Total Price: ₹0';
-  items=[];
-  renderItems();
+  items=[];renderItems();
 }
 </script>
+
+<style>
+.whatsapp-btn {
+  background: linear-gradient(90deg, #25D366, #128C7E);
+  color: #fff; border: none; padding: 12px 35px;
+  border-radius: 50px; font-size: 18px; cursor: pointer;
+  transition: 0.3s; box-shadow: 0 5px 15px rgba(37,211,102,0.3);
+}
+.whatsapp-btn:hover {
+  background: linear-gradient(90deg, #128C7E, #25D366);
+  transform: translateY(-2px);
+}
+.popup-overlay {
+  display:none;position:fixed;top:0;left:0;width:100%;height:100%;
+  background:rgba(0,0,0,0.5);justify-content:center;align-items:center;z-index:9999;
+}
+.popup-content button {
+  background:#25D366;color:white;border:none;padding:10px 25px;
+  border-radius:25px;cursor:pointer;font-weight:bold;
+}
+</style>
+
 
 
     <!-- end reservations-main -->
