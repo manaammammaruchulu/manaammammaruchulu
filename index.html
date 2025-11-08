@@ -1364,25 +1364,25 @@ function sendToWhatsApp(e){
  const total=items.reduce((s,i)=>s+i.subtotal,0);
   
   let msgLines = [];
-    msgLines.push('📦 *New Order from - ${name} (Mana Ammamma Ruchulu!)*');
-    msgLines.push('----------------------------------------');
+    msgLines.push(`📦 *New Order from ${name} (Mana Ammamma Ruchulu)*`);
+    msgLines.push(`----------------------------------------`);
     msgLines.push(`👤 *Name:* ${name}`);
     msgLines.push(`📧 *Email:* ${email}`);
     msgLines.push(`📱 *Phone:* ${phone}`);
-    msgLines.push('----------------------------------------');
-    msgLines.push('🍴 *Order Details:*');
+    msgLines.push(`----------------------------------------`);
+    msgLines.push(`🍴 *Order Details:*`);
 
     items.forEach(it=>{
       msgLines.push(`🟢 *Item:* ${it.product}\n📦 *Qty:* ${it.quantity} gms × ${it.count}\n💰 *Cost:* ${formatRupee(it.subtotal)}`);
-      msgLines.push('----------------------------------------');
+      msgLines.push(`----------------------------------------`);
     });
 
-  msgLines.push('----------------------------------------');
+  msgLines.push(`----------------------------------------`);
   msgLines.push(`🧾 *Total Amount:* ${formatRupee(total)}`);
-  msgLines.push('🙏 Thank you for ordering from *Mana Ammamma Ruchulu*! ❤️');
-  msgLines.push('We’ll contact you shortly to confirm delivery.');
+  msgLines.push(`🙏 Thank you for ordering from *Mana Ammamma Ruchulu*! ❤️`);
+  msgLines.push(`We’ll contact you shortly to confirm delivery.`);
 
-  const whatsappText=encodeURIComponent(msgLines.join('\n'));
+  const whatsappText=encodeURIComponent(msgLines.join(`\n`));
   const whatsappNumber='919849790312'; // your business number
   //const whatsappURL=`https://wa.me/${whatsappNumber}?text=${whatsappText}`;
   //window.open(whatsappURL,'_blank');
