@@ -1321,8 +1321,6 @@
   Item quantity updated 🛒
 </div>
 
-
-
 <script src="https://cdn.jsdelivr.net/npm/emailjs-com@3/dist/email.min.js"></script>
 <script>
 (function() {
@@ -1505,72 +1503,100 @@ function sendToWhatsApp(event) {
   }
 
   const total = items.reduce((s, it) => s + it.subtotal, 0);
+  const orderDetails = items.map(it =>
+    `• ${it.product} (${it.quantity} gms × ${it.count}) - ${formatRupee(it.subtotal)}`
+  ).join('\n');
 
-  // === ADMIN EMAIL MESSAGE (HTML) ===
-  const adminMsg = `
-  <div style="font-family:Arial, sans-serif; background:#fffef8; padding:18px; border-radius:10px; border:1px solid #f3e5b2; max-width:700px; margin:auto;">
-    <h2 style="color:#d17d00;">📦 New Order Received</h2>
-    <p>👤 <b>${name}</b><br>📧 ${email}<br>📱 ${phone}</p>
-    <hr>
-    <div>
-      ${items.map(it => `• <b>${it.product}</b> — ${it.quantity} gms × ${it.count} — <b>${formatRupee(it.subtotal)}</b><br>`).join('')}
-    </div>
-    <h3 style="color:#d17d00;">🧾 Total: ${formatRupee(total)}</h3>
-  </div>`;
+  // ✅ Messages
+  const adminMsg = `📦 New Order Received from ${name}\n----------------------------------------\n👤 Name: ${name}\n📧 Email: ${email}\n📱 Phone: ${phone}\n----------------------------------------\n🍴 Order Details:\n${orderDetails}\n----------------------------------------\n🧾 Total: ${formatRupee(total)}\n\n– Mana Ammamma Ruchulu`;
 
-  // === CUSTOMER EMAIL MESSAGE (HTML) ===
-  const customerMsg = `
-  <div style="font-family:Arial, sans-serif; background:#f7fff8; padding:18px; border-radius:10px; border:1px solid #d7f3dc; max-width:680px; margin:auto;">
-    <h2 style="color:#128C7E;">💚 Thank you for your order!</h2>
-    <p>Dear ${name}, your order details are below:</p>
-    <div>
-      ${items.map(it => `• <b>${it.product}</b> — ${it.quantity} gms × ${it.count} — <b>${formatRupee(it.subtotal)}</b><br>`).join('')}
-    </div>
-    <h3>Total: ${formatRupee(total)}</h3>
-    <p>We'll contact you on WhatsApp (${phone}).</p>
-  </div>`;
+  const customerMsg = `Dear ${name},\n\nThank you for your order from *Mana Ammamma Ruchulu!* 💚\n\nYour order details:\n${orderDetails}\n----------------------------------------\nTotal: ${formatRupee(total)}\n\nWe'll contact you soon on WhatsApp (${phone}).\n\n– Team Mana Ammamma Ruchulu`;
 
-  // ✅ Open WhatsApp
+  // ✅ Open WhatsApp (same tab)
   const whatsappNumber = '919849790312';
-  const waUrl = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(`📦 New order from ${name}`)}`;
+  const waUrl = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(
+  `📦 New Order from ${name}\n\n${orderDetails}\n\n🧾 Total: ${formatRupee(total)}\n📱 Phone: ${phone}\n📧 Email: ${email}`
+)}`;
+
   window.location.href = waUrl;
 
-  // ✅ Send HTML Emails
+  // ✅ Send Email to Company
   emailjs.send("service_25u05y5", "template_9wy0hii", {
     to_email: "manaammammaruchulu@gmail.com",
-    subject: `📦 New Order – ${name}`,
-    from_name: "Mana Ammamma Ruchulu Website",
-    reply_to: email,
-    message_html: adminMsg
+    subject: `📦 New Order Received – ${name}`,
+    name, email, phone,
+    message: adminMsg
   });
 
+  // ✅ Send Email to Customer
   emailjs.send("service_25u05y5", "template_9wy0hii", {
     to_email: email,
-    subject: `💚 Thank You – Mana Ammamma Ruchulu`,
-    from_name: "Mana Ammamma Ruchulu",
-    reply_to: "manaammammaruchulu@gmail.com",
-    message_html: customerMsg
+    subject: `Mana Ammamma Ruchulu – Order Confirmation`,
+    name, email, phone,
+    message: customerMsg
   });
 
   // ✅ Show Popup
   setTimeout(() => showPopup(name, phone), 2500);
 }
 
-// ✅ Popup
+// ✅ Thank You Popup
 function showPopup(name, phone) {
   const total = items.reduce((sum, it) => sum + it.subtotal, 0);
   const totalItems = items.reduce((sum, it) => sum + it.count, 0);
 
   const popup = document.getElementById('popup');
   popup.innerHTML = `
-    <div class="popup-content" style="background:#f8fff9;border:2px solid #b7edc2;border-radius:16px;padding:30px 20px;text-align:center;box-shadow:0 4px 15px rgba(37,211,102,0.25);max-width:400px;width:90%;animation: fadeIn 0.4s ease;">
-      <h2 style="color:#128C7E;">🎉 Thank You, ${name}!</h2>
-      <p>Your order has been placed successfully.<br>We’ll contact you shortly on WhatsApp <b>${phone}</b>.</p>
-      <p><b>🛒 ${totalItems} items</b><br><b>💰 Total: ${formatRupee(total)}</b></p>
-      <button id="popup-ok-btn" style="background:#25D366;color:white;border:none;border-radius:25px;padding:10px 25px;cursor:pointer;font-weight:bold;">OK</button>
+    <div class="popup-content" style="
+      background:#f8fff9;
+      border:2px solid #b7edc2;
+      border-radius:16px;
+      padding:30px 20px;
+      text-align:center;
+      box-shadow:0 4px 15px rgba(37,211,102,0.25);
+      max-width:400px;
+      width:90%;
+      animation: fadeIn 0.4s ease;
+    ">
+      <h2 style="color:#128C7E; margin-bottom:12px;">🎉 Thank You, ${name}!</h2>
+      <p style="color:#333; font-size:15px; line-height:1.5;">
+        Your order has been placed successfully.<br>
+        We’ll contact you shortly on WhatsApp <b>${phone}</b>.
+      </p>
+      <div style="margin:15px auto; background:#ffffff; border:1px solid #dff3e0; border-radius:10px; padding:12px;">
+        <p style="margin:0; color:#128C7E; font-weight:bold; font-size:15px;">
+          🛒 ${totalItems} item${totalItems > 1 ? 's' : ''} ordered<br>
+          💰 Total: ${formatRupee(total)}
+        </p>
+      </div>
+      <p style="color:#128C7E; font-size:14px; margin-top:10px;">
+        💚 We appreciate your trust in <b>Mana Ammamma Ruchulu</b>!
+      </p>
+      <button id="popup-ok-btn" style="
+        background:#25D366;
+        color:white;
+        border:none;
+        border-radius:25px;
+        padding:10px 25px;
+        cursor:pointer;
+        font-weight:bold;
+        font-size:15px;
+        margin-top:10px;
+      ">OK</button>
     </div>
   `;
-  popup.style.cssText = "display:flex;position:fixed;top:0;left:0;width:100%;height:100%;justify-content:center;align-items:center;background:rgba(0,0,0,0.4);z-index:9999;";
+
+  popup.style.display = 'flex';
+  popup.style.position = 'fixed';
+  popup.style.top = '0';
+  popup.style.left = '0';
+  popup.style.width = '100%';
+  popup.style.height = '100%';
+  popup.style.justifyContent = 'center';
+  popup.style.alignItems = 'center';
+  popup.style.background = 'rgba(0,0,0,0.4)';
+  popup.style.zIndex = '9999';
+
   document.getElementById('popup-ok-btn').addEventListener('click', closePopup);
 }
 
@@ -1591,8 +1617,6 @@ function closePopup() {
   to { opacity: 1; transform: scale(1); }
 }
 </style>
-
-
 
     <!-- end reservations-main -->
 
