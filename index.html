@@ -1321,6 +1321,7 @@
   Item quantity updated 🛒
 </div>
 
+
 <script src="https://cdn.jsdelivr.net/npm/emailjs-com@3/dist/email.min.js"></script>
 <script>
 (function() {
@@ -1380,65 +1381,20 @@ function renderItems() {
 
   items.forEach(it => {
     const itemDiv = document.createElement('div');
-    itemDiv.style.cssText = `
-      display:flex;justify-content:space-between;align-items:center;
-      padding:10px 12px;margin-bottom:8px;
-      border:1px solid #dff3e0;border-radius:10px;background:#f8fff9;
-      transition:0.3s;
-    `;
-    itemDiv.onmouseover = () => {
-      itemDiv.style.background = '#eaffea';
-      itemDiv.style.boxShadow = '0 3px 10px rgba(37,211,102,0.15)';
-      itemDiv.style.transform = 'translateY(-2px)';
-    };
-    itemDiv.onmouseout = () => {
-      itemDiv.style.background = '#f8fff9';
-      itemDiv.style.boxShadow = 'none';
-      itemDiv.style.transform = 'none';
-    };
+    itemDiv.style.display = 'flex';
+    itemDiv.style.justifyContent = 'space-between';
+    itemDiv.style.alignItems = 'center';
+    itemDiv.style.padding = '8px 6px';
+    itemDiv.style.borderBottom = '1px dashed #eee';
 
     const left = document.createElement('div');
-    left.style.maxWidth = '65%';
-    left.innerHTML = `<strong style="font-size:14px; color:#128C7E;">${it.product}</strong>
-                      <div style="color:#555; font-size:13px; margin-top:4px;">Qty: ${it.quantity} gms</div>`;
+    left.innerHTML = `<strong style="font-size:14px;">${it.product}</strong>
+                      <div style="color:#555; font-size:13px; margin-top:4px;">Qty: ${it.quantity} gms × ${it.count}</div>`;
 
     const right = document.createElement('div');
     right.style.textAlign = 'right';
+    right.innerHTML = `<b>${formatRupee(it.subtotal)}</b>`;
 
-    const controls = document.createElement('div');
-    controls.style.display = 'inline-flex';
-    controls.style.alignItems = 'center';
-    controls.style.gap = '6px';
-    controls.style.marginBottom = '6px';
-
-    const btnMinus = document.createElement('button');
-    btnMinus.type = 'button'; btnMinus.innerText = '−';
-    btnMinus.onclick = () => changeCount(it.id, -1);
-
-    const countSpan = document.createElement('span');
-    countSpan.innerText = it.count;
-    countSpan.style.minWidth = '24px';
-    countSpan.style.display = 'inline-block';
-    countSpan.style.textAlign = 'center';
-    countSpan.style.fontWeight = '600';
-
-    const btnPlus = document.createElement('button');
-    btnPlus.type = 'button'; btnPlus.innerText = '+';
-    btnPlus.onclick = () => changeCount(it.id, +1);
-
-    const btnRemove = document.createElement('button');
-    btnRemove.type = 'button'; btnRemove.innerText = '🗑';
-    btnRemove.onclick = () => removeItem(it.id);
-    btnRemove.style.cssText = 'background:transparent;border:none;cursor:pointer;';
-
-    controls.append(btnMinus, countSpan, btnPlus, btnRemove);
-
-    const priceDiv = document.createElement('div');
-    priceDiv.style.fontWeight = '700';
-    priceDiv.style.marginTop = '4px';
-    priceDiv.innerText = formatRupee(it.subtotal);
-
-    right.append(controls, priceDiv);
     itemDiv.append(left, right);
     itemsContainer.appendChild(itemDiv);
   });
@@ -1449,10 +1405,11 @@ function renderItems() {
 addItemBtn.addEventListener('click', () => {
   const product = productSelect.value;
   const quantity = parseInt(quantitySelect.value);
-  if (!product || product === "Select Product" || isNaN(quantity) || quantity <= 0) {
-    alert('Please select a valid product and quantity before adding.');
+  if (!product || product === "Select Product" || isNaN(quantity)) {
+    alert('Please select a valid product and quantity.');
     return;
   }
+
   const existing = items.find(it => it.product === product && it.quantity === quantity);
   if (existing) {
     existing.count += 1;
@@ -1461,31 +1418,15 @@ addItemBtn.addEventListener('click', () => {
   } else {
     items.push({ id: itemIdCounter++, product, quantity, count: 1, subtotal: computeSubtotal(product, quantity, 1) });
   }
-  productSelect.selectedIndex = 0;
-  quantitySelect.selectedIndex = 0;
   renderItems();
 });
-
-function changeCount(id, delta) {
-  const idx = items.findIndex(it => it.id === id);
-  if (idx === -1) return;
-  items[idx].count += delta;
-  if (items[idx].count <= 0) items.splice(idx, 1);
-  else items[idx].subtotal = computeSubtotal(items[idx].product, items[idx].quantity, items[idx].count);
-  renderItems();
-}
-
-function removeItem(id) {
-  items = items.filter(it => it.id !== id);
-  renderItems();
-}
 
 function updateTotal() {
   const total = items.reduce((sum, it) => sum + it.subtotal, 0);
   totalPriceEl.innerText = 'Total Price: ' + formatRupee(total);
 }
 
-// ✅ WhatsApp + EmailJS + Popup Integration
+// ✅ Combined WhatsApp + Email + Popup
 function sendToWhatsApp(event) {
   event.preventDefault();
 
@@ -1494,7 +1435,7 @@ function sendToWhatsApp(event) {
   const phone = document.getElementById('phone').value.trim();
 
   if (!name || !email || !phone) {
-    alert('Please fill Name, Email and Phone before ordering.');
+    alert('Please fill all required fields.');
     return;
   }
   if (items.length === 0) {
@@ -1503,120 +1444,68 @@ function sendToWhatsApp(event) {
   }
 
   const total = items.reduce((s, it) => s + it.subtotal, 0);
-  const orderDetails = items.map(it =>
-    `• ${it.product} (${it.quantity} gms × ${it.count}) - ${formatRupee(it.subtotal)}`
+  const orderDetails = items.map(it => 
+    `🍴 *${it.product}* (${it.quantity}g × ${it.count}) — ${formatRupee(it.subtotal)}`
   ).join('\n');
 
-  // ✅ Messages
-  const adminMsg = `📦 New Order Received from ${name}\n----------------------------------------\n👤 Name: ${name}\n📧 Email: ${email}\n📱 Phone: ${phone}\n----------------------------------------\n🍴 Order Details:\n${orderDetails}\n----------------------------------------\n🧾 Total: ${formatRupee(total)}\n\n– Mana Ammamma Ruchulu`;
+  const message = 
+`📦 *New Order Received – Mana Ammamma Ruchulu*
+────────────────────────────
+👤 *Name:* ${name}
+📧 *Email:* ${email}
+📱 *Phone:* ${phone}
+────────────────────────────
+${orderDetails}
+────────────────────────────
+🧾 *Total:* ${formatRupee(total)}
+🙏 Thank you for ordering from *Mana Ammamma Ruchulu*! 💚`;
 
-  const customerMsg = `Dear ${name},\n\nThank you for your order from *Mana Ammamma Ruchulu!* 💚\n\nYour order details:\n${orderDetails}\n----------------------------------------\nTotal: ${formatRupee(total)}\n\nWe'll contact you soon on WhatsApp (${phone}).\n\n– Team Mana Ammamma Ruchulu`;
+  // ✅ Open WhatsApp
+  const whatsappNumber = '919849790312'; // Replace with your actual number
+  const waUrl = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(message)}`;
+  window.open(waUrl, '_blank');
 
-  // ✅ Open WhatsApp (same tab)
-  const whatsappNumber = '919849790312';
-  const waUrl = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(
-  `📦 New Order from ${name}\n\n${orderDetails}\n\n🧾 Total: ${formatRupee(total)}\n📱 Phone: ${phone}\n📧 Email: ${email}`
-)}`;
-
-  window.location.href = waUrl;
-
-  // ✅ Send Email to Company
+  // ✅ Send email to shop
   emailjs.send("service_25u05y5", "template_9wy0hii", {
     to_email: "manaammammaruchulu@gmail.com",
-    subject: `📦 New Order Received – ${name}`,
     name, email, phone,
-    message: adminMsg
+    message_html: message
   });
 
-  // ✅ Send Email to Customer
+  // ✅ Send confirmation email to customer
   emailjs.send("service_25u05y5", "template_9wy0hii", {
     to_email: email,
-    subject: `Mana Ammamma Ruchulu – Order Confirmation`,
     name, email, phone,
-    message: customerMsg
+    message_html: `Dear ${name},<br><br>Thank you for your order from <b>Mana Ammamma Ruchulu!</b> 💚<br><br>${orderDetails.replace(/\n/g, '<br>')}<br><br><b>Total:</b> ${formatRupee(total)}<br><br>We’ll contact you shortly on WhatsApp (${phone}).`
   });
 
-  // ✅ Show Popup
-  setTimeout(() => showPopup(name, phone), 2500);
+  // ✅ Show confirmation popup
+  setTimeout(() => showPopup(name, phone, total), 1500);
 }
 
-// ✅ Thank You Popup
-function showPopup(name, phone) {
-  const total = items.reduce((sum, it) => sum + it.subtotal, 0);
-  const totalItems = items.reduce((sum, it) => sum + it.count, 0);
-
+function showPopup(name, phone, total) {
   const popup = document.getElementById('popup');
   popup.innerHTML = `
-    <div class="popup-content" style="
-      background:#f8fff9;
-      border:2px solid #b7edc2;
-      border-radius:16px;
-      padding:30px 20px;
-      text-align:center;
-      box-shadow:0 4px 15px rgba(37,211,102,0.25);
-      max-width:400px;
-      width:90%;
-      animation: fadeIn 0.4s ease;
-    ">
-      <h2 style="color:#128C7E; margin-bottom:12px;">🎉 Thank You, ${name}!</h2>
-      <p style="color:#333; font-size:15px; line-height:1.5;">
-        Your order has been placed successfully.<br>
-        We’ll contact you shortly on WhatsApp <b>${phone}</b>.
-      </p>
-      <div style="margin:15px auto; background:#ffffff; border:1px solid #dff3e0; border-radius:10px; padding:12px;">
-        <p style="margin:0; color:#128C7E; font-weight:bold; font-size:15px;">
-          🛒 ${totalItems} item${totalItems > 1 ? 's' : ''} ordered<br>
-          💰 Total: ${formatRupee(total)}
-        </p>
-      </div>
-      <p style="color:#128C7E; font-size:14px; margin-top:10px;">
-        💚 We appreciate your trust in <b>Mana Ammamma Ruchulu</b>!
-      </p>
-      <button id="popup-ok-btn" style="
-        background:#25D366;
-        color:white;
-        border:none;
-        border-radius:25px;
-        padding:10px 25px;
-        cursor:pointer;
-        font-weight:bold;
-        font-size:15px;
-        margin-top:10px;
-      ">OK</button>
-    </div>
-  `;
-
+    <div class="popup-content">
+      <h3>🎉 Thank You, ${name}!</h3>
+      <p>Your order has been placed successfully.</p>
+      <p>We’ll contact you shortly on WhatsApp <b>${phone}</b>.</p>
+      <p><b>Total:</b> ${formatRupee(total)}</p>
+      <button onclick="closePopup()">OK</button>
+    </div>`;
   popup.style.display = 'flex';
-  popup.style.position = 'fixed';
-  popup.style.top = '0';
-  popup.style.left = '0';
-  popup.style.width = '100%';
-  popup.style.height = '100%';
-  popup.style.justifyContent = 'center';
-  popup.style.alignItems = 'center';
-  popup.style.background = 'rgba(0,0,0,0.4)';
-  popup.style.zIndex = '9999';
-
-  document.getElementById('popup-ok-btn').addEventListener('click', closePopup);
 }
 
 function closePopup() {
-  const popup = document.getElementById('popup');
-  popup.style.display = 'none';
+  document.getElementById('popup').style.display = 'none';
   document.getElementById('order-form').reset();
   document.getElementById('total-price').innerText = 'Total Price: ₹0';
   items = [];
   renderItems();
-  setTimeout(() => location.reload(), 400);
 }
 </script>
 
-<style>
-@keyframes fadeIn {
-  from { opacity: 0; transform: scale(0.95); }
-  to { opacity: 1; transform: scale(1); }
-}
-</style>
+
 
     <!-- end reservations-main -->
 
