@@ -1402,7 +1402,7 @@ function sendToWhatsApp(e){
   });
 
   // WhatsApp message
-  window.open(`https://wa.me/919849790312?text=${encodeURIComponent(total)}`,'_blank');
+  window.open(`https://wa.me/919849790312?text=${encodeURIComponent(msgLines)}`,'_blank');
 
   setTimeout(()=>showPopup(name,phone,total),1000);
 }
