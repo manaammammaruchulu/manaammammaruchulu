@@ -1199,6 +1199,7 @@
 
 <!-- === Start: Order section === -->
 
+<!-- === Start: Order section === -->
 <div id="order" class="reservations-main pad-top-100 pad-bottom-100">
   <div class="container">
     <div class="row">
@@ -1318,19 +1319,34 @@
     </div>
   </div>
 </div>
+<!-- === End: Order section === -->
 
-<!-- Popup -->
+<!-- Popup Modal -->
 <div id="popup" class="popup-overlay"></div>
 
-<!-- Toast -->
-<div id="toast" style="position:fixed;bottom:20px;left:50%;transform:translateX(-50%) translateY(50px);background:#25d366;color:#fff;padding:10px 18px;border-radius:30px;font-weight:600;opacity:0;transition:all 0.4s ease;z-index:9999;box-shadow:0 3px 10px rgba(0,0,0,0.2);">
+<!-- Toast Notification -->
+<div id="toast" style="
+  position:fixed;
+  bottom:20px;
+  left:50%;
+  transform:translateX(-50%) translateY(50px);
+  background:#25d366;
+  color:#fff;
+  padding:10px 18px;
+  border-radius:30px;
+  font-weight:600;
+  opacity:0;
+  transition:all 0.4s ease;
+  z-index:9999;
+  box-shadow:0 3px 10px rgba(0,0,0,0.2);
+">
   Item added 🛒
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/emailjs-com@3/dist/email.min.js"></script>
 <script>
 (function() {
-  emailjs.init("LPKZRX7B1It83cffY"); // your public key
+  emailjs.init("LPKZRX7B1It83cffY"); // Public Key
 })();
 
 const productPrices = {
@@ -1352,22 +1368,17 @@ function computeSubtotal(product, quantity, count) {
   return (quantity / 250) * base * count;
 }
 
-function updateTotal() {
-  const total = items.reduce((s, it) => s + it.subtotal, 0);
-  document.getElementById('total-price').innerText =
-    'Total Price: ' + formatRupee(total);
-}
-
 function renderItems() {
   const wrap = document.getElementById('order-summary-wrapper');
   const totalWrap = document.getElementById('total-price-wrapper');
   const container = document.getElementById('items-container');
+  const totalEl = document.getElementById('total-price');
 
   if (items.length === 0) {
     container.innerHTML = '<p style="text-align:center;color:#888;">No items added yet.</p>';
     wrap.style.display = 'none';
     totalWrap.style.display = 'none';
-    document.getElementById('total-price').innerText = 'Total Price: ₹0';
+    totalEl.innerText = 'Total Price: ₹0';
     return;
   }
 
@@ -1376,21 +1387,21 @@ function renderItems() {
   container.innerHTML = '';
 
   items.forEach(it => {
-    const div = document.createElement('div');
-    div.style.display = 'flex';
-    div.style.justifyContent = 'space-between';
-    div.style.alignItems = 'center';
-    div.style.padding = '8px 0';
-    div.style.borderBottom = '1px dashed #eee';
+    const row = document.createElement('div');
+    row.style.display = 'flex';
+    row.style.justifyContent = 'space-between';
+    row.style.alignItems = 'center';
+    row.style.padding = '8px 0';
+    row.style.borderBottom = '1px dashed #eee';
 
-    // Left: product name + quantity
+    // LEFT: name + qty line
     const left = document.createElement('div');
     left.innerHTML = `
       <strong>${it.product}</strong>
       <div style="font-size:13px;color:#555;">Qty: ${it.quantity} gms × ${it.count}</div>
     `;
 
-    // Right: controls + price
+    // RIGHT: controls + price
     const right = document.createElement('div');
     right.style.textAlign = 'right';
 
@@ -1449,13 +1460,14 @@ function renderItems() {
     right.appendChild(controls);
     right.appendChild(priceDiv);
 
-    div.appendChild(left);
-    div.appendChild(right);
+    row.appendChild(left);
+    row.appendChild(right);
 
-    container.appendChild(div);
+    container.appendChild(row);
   });
 
-  updateTotal();
+  const total = items.reduce((s, it) => s + it.subtotal, 0);
+  totalEl.innerText = 'Total Price: ' + formatRupee(total);
 }
 
 function changeItemCount(id, delta) {
@@ -1523,8 +1535,8 @@ function showToast(msg) {
   }, 2000);
 }
 
-function sendToWhatsApp(e) {
-  e.preventDefault();
+function sendToWhatsApp(event) {
+  event.preventDefault();
   const name = document.getElementById('form_name').value.trim();
   const email = document.getElementById('email').value.trim();
   const phone = document.getElementById('phone').value.trim();
@@ -1608,6 +1620,41 @@ function closePopup() {
 </script>
 
 <style>
+/* --- ORDER FORM STYLING --- */
+.form-reservations-box {
+  background: #fff;
+  border-radius: 15px;
+  box-shadow: 0 5px 25px rgba(0,0,0,0.1);
+  transition: all 0.3s ease-in-out;
+}
+
+.form-title {
+  font-size: 24px;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 15px;
+  text-align: center;
+}
+
+.form-box input,
+.form-box select {
+  width: 100%;
+  padding: 12px 15px;
+  border: 2px solid #eee;
+  border-radius: 16px;
+  font-size: 16px;
+  transition: 0.3s;
+  background-color: #fafafa;
+}
+
+.form-box input:focus,
+.form-box select:focus {
+  border-color: #25D366;
+  background: #fff;
+  box-shadow: 0 0 5px rgba(37, 211, 102, 0.3);
+  outline: none;
+}
+
 /* --- BUTTON DESIGN --- */
 .whatsapp-btn {
   background: linear-gradient(90deg, #25D366, #128C7E);
@@ -1632,6 +1679,7 @@ function closePopup() {
   font-size: 20px;
 }
 
+/* --- POPUP STYLE --- */
 .popup-overlay {
   display:none;
   position:fixed;
