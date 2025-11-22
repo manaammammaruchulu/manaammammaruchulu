@@ -1198,6 +1198,7 @@
 <!-- === Start: Order section === -->
 
 <!-- === Start: Order section === -->
+
 <div id="order" class="reservations-main pad-top-100 pad-bottom-100">
   <div class="container">
     <div class="row">
@@ -1298,14 +1299,17 @@
 
             <!-- Total -->
             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12" style="margin-top:12px; display:none;" id="total-price-wrapper">
-              <p id="total-price" style="font-weight:bold; font-size:18px; text-align:center; color:#d17d00; background:#fffef8; border:2px dashed #f3e5b2; border-radius:10px; padding:10px;">Total Price: ₹0</p>
+              <p id="total-price" style="font-weight:bold; font-size:18px; text-align:center; color:#d17d00; background:#fffef8; border:2px dashed #f3e5b2; border-radius:10px; padding:10px;">
+                Total Price: ₹0
+              </p>
             </div>
 
             <!-- Submit -->
-           <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
               <div class="reserve-book-btn text-center">
                 <button class="whatsapp-btn" type="submit">
-                  <i class="fa fa-whatsapp"></i> Order on WhatsApp </button>
+                  <i class="fa fa-whatsapp"></i> Order on WhatsApp
+                </button>
               </div>
             </div>
           </form>
@@ -1319,11 +1323,15 @@
 <div id="popup" class="popup-overlay"></div>
 
 <!-- Toast -->
-<div id="toast" style="position:fixed;bottom:20px;left:50%;transform:translateX(-50%) translateY(50px);background:#25d366;color:#fff;padding:10px 18px;border-radius:30px;font-weight:600;opacity:0;transition:all 0.4s ease;z-index:9999;box-shadow:0 3px 10px rgba(0,0,0,0.2);">Item added 🛒</div>
+<div id="toast" style="position:fixed;bottom:20px;left:50%;transform:translateX(-50%) translateY(50px);background:#25d366;color:#fff;padding:10px 18px;border-radius:30px;font-weight:600;opacity:0;transition:all 0.4s ease;z-index:9999;box-shadow:0 3px 10px rgba(0,0,0,0.2);">
+  Item added 🛒
+</div>
 
 <script src="https://cdn.jsdelivr.net/npm/emailjs-com@3/dist/email.min.js"></script>
 <script>
-(function() { emailjs.init("LPKZRX7B1It83cffY"); })();
+(function() {
+  emailjs.init("LPKZRX7B1It83cffY"); // your public key
+})();
 
 const productPrices = {
   "Chicken Bone Pickle":299,"Boneless Chicken Pickle":349,"Tokku Chicken Pickle":449,"Gongura Chicken Pickle":399,"Mango Chicken Pickle":499,"Natukodi Pickle":549,
@@ -1332,112 +1340,274 @@ const productPrices = {
   "Kandi Podi":224,"Munagaku Podi":249,"Karam Podi":249,"Chilli Powder":249,"Karivepaku Podi":249,"Garlic Karam Podi":349
 };
 
-let items=[]; let itemId=1;
-function formatRupee(n){return '₹'+Number(n).toLocaleString('en-IN');}
-function computeSubtotal(p,q,c){const b=productPrices[p]||0;return (q/250)*b*c;}
+let items = [];
+let itemId = 1;
 
-function renderItems(){
-  const wrap=document.getElementById('order-summary-wrapper');
-  const totalWrap=document.getElementById('total-price-wrapper');
-  const container=document.getElementById('items-container');
-  const totalEl=document.getElementById('total-price');
-  if(items.length===0){container.innerHTML='<p style="text-align:center;color:#888;">No items added yet.</p>';wrap.style.display='none';totalWrap.style.display='none';return;}
-  wrap.style.display='block';totalWrap.style.display='block';container.innerHTML='';
-  items.forEach(it=>{
-    const div=document.createElement('div');
-    div.style='display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px dashed #eee;';
-    div.innerHTML=`<div><strong>${it.product}</strong><div style="font-size:13px;color:#555;">Qty: ${it.quantity} g × ${it.count}</div></div><div style="font-weight:700;">${formatRupee(it.subtotal)}</div>`;
-    container.appendChild(div);
-  });
-  totalEl.innerText='Total Price: '+formatRupee(items.reduce((s,it)=>s+it.subtotal,0));
+function formatRupee(n) {
+  return '₹' + Number(n).toLocaleString('en-IN', { maximumFractionDigits: 0 });
 }
 
-document.getElementById('add-item-btn').onclick=()=>{
-  const p=document.getElementById('product').value;
-  const q=parseInt(document.getElementById('quantity').value);
-  if(!p||isNaN(q)){alert('Select valid product and quantity.');return;}
-  const exist=items.find(i=>i.product===p&&i.quantity===q);
-  if(exist){exist.count++;exist.subtotal=computeSubtotal(p,q,exist.count);}
-  else{items.push({id:itemId++,product:p,quantity:q,count:1,subtotal:computeSubtotal(p,q,1)});}
+function computeSubtotal(product, quantity, count) {
+  const base = productPrices[product] || 0;
+  return (quantity / 250) * base * count;
+}
+
+function updateTotal() {
+  const total = items.reduce((s, it) => s + it.subtotal, 0);
+  document.getElementById('total-price').innerText =
+    'Total Price: ' + formatRupee(total);
+}
+
+function renderItems() {
+  const wrap = document.getElementById('order-summary-wrapper');
+  const totalWrap = document.getElementById('total-price-wrapper');
+  const container = document.getElementById('items-container');
+
+  if (items.length === 0) {
+    container.innerHTML = '<p style="text-align:center;color:#888;">No items added yet.</p>';
+    wrap.style.display = 'none';
+    totalWrap.style.display = 'none';
+    document.getElementById('total-price').innerText = 'Total Price: ₹0';
+    return;
+  }
+
+  wrap.style.display = 'block';
+  totalWrap.style.display = 'block';
+  container.innerHTML = '';
+
+  items.forEach(it => {
+    const div = document.createElement('div');
+    div.style.display = 'flex';
+    div.style.justifyContent = 'space-between';
+    div.style.alignItems = 'center';
+    div.style.padding = '8px 0';
+    div.style.borderBottom = '1px dashed #eee';
+
+    // Left: product name + quantity
+    const left = document.createElement('div');
+    left.innerHTML = `
+      <strong>${it.product}</strong>
+      <div style="font-size:13px;color:#555;">Qty: ${it.quantity} gms × ${it.count}</div>
+    `;
+
+    // Right: controls + price
+    const right = document.createElement('div');
+    right.style.textAlign = 'right';
+
+    const controls = document.createElement('div');
+    controls.style.display = 'inline-flex';
+    controls.style.alignItems = 'center';
+    controls.style.gap = '6px';
+    controls.style.marginBottom = '4px';
+
+    const btnMinus = document.createElement('button');
+    btnMinus.type = 'button';
+    btnMinus.innerText = '−';
+    btnMinus.style.padding = '2px 8px';
+    btnMinus.style.borderRadius = '12px';
+    btnMinus.style.border = '1px solid #ddd';
+    btnMinus.style.cursor = 'pointer';
+    btnMinus.onclick = () => changeItemCount(it.id, -1);
+
+    const countSpan = document.createElement('span');
+    countSpan.innerText = it.count;
+    countSpan.style.minWidth = '24px';
+    countSpan.style.display = 'inline-block';
+    countSpan.style.textAlign = 'center';
+    countSpan.style.fontWeight = '600';
+
+    const btnPlus = document.createElement('button');
+    btnPlus.type = 'button';
+    btnPlus.innerText = '+';
+    btnPlus.style.padding = '2px 8px';
+    btnPlus.style.borderRadius = '12px';
+    btnPlus.style.border = '1px solid #ddd';
+    btnPlus.style.cursor = 'pointer';
+    btnPlus.onclick = () => changeItemCount(it.id, +1);
+
+    const btnRemove = document.createElement('button');
+    btnRemove.type = 'button';
+    btnRemove.innerText = '🗑';
+    btnRemove.title = 'Remove item';
+    btnRemove.style.padding = '2px 6px';
+    btnRemove.style.borderRadius = '12px';
+    btnRemove.style.border = '1px solid #f0b0b0';
+    btnRemove.style.cursor = 'pointer';
+    btnRemove.style.background = '#fff5f5';
+    btnRemove.onclick = () => removeItem(it.id);
+
+    controls.appendChild(btnMinus);
+    controls.appendChild(countSpan);
+    controls.appendChild(btnPlus);
+    controls.appendChild(btnRemove);
+
+    const priceDiv = document.createElement('div');
+    priceDiv.style.fontWeight = '700';
+    priceDiv.style.fontSize = '14px';
+    priceDiv.innerText = formatRupee(it.subtotal);
+
+    right.appendChild(controls);
+    right.appendChild(priceDiv);
+
+    div.appendChild(left);
+    div.appendChild(right);
+
+    container.appendChild(div);
+  });
+
+  updateTotal();
+}
+
+function changeItemCount(id, delta) {
+  const idx = items.findIndex(i => i.id === id);
+  if (idx === -1) return;
+
+  items[idx].count += delta;
+
+  if (items[idx].count <= 0) {
+    items.splice(idx, 1);
+    showToast('Item removed 🗑');
+  } else {
+    items[idx].subtotal = computeSubtotal(
+      items[idx].product,
+      items[idx].quantity,
+      items[idx].count
+    );
+    showToast('Quantity updated 🛒');
+  }
+
   renderItems();
-  showToast(`Added ${p} (${q}g)`);
+}
+
+function removeItem(id) {
+  items = items.filter(i => i.id !== id);
+  renderItems();
+  showToast('Item removed 🗑');
+}
+
+document.getElementById('add-item-btn').onclick = () => {
+  const p = document.getElementById('product').value;
+  const q = parseInt(document.getElementById('quantity').value);
+
+  if (!p || isNaN(q)) {
+    alert('Select valid product and quantity.');
+    return;
+  }
+
+  const exist = items.find(i => i.product === p && i.quantity === q);
+  if (exist) {
+    exist.count++;
+    exist.subtotal = computeSubtotal(p, q, exist.count);
+  } else {
+    items.push({
+      id: itemId++,
+      product: p,
+      quantity: q,
+      count: 1,
+      subtotal: computeSubtotal(p, q, 1)
+    });
+  }
+
+  renderItems();
+  showToast(`Added ${p} (${q} gms)`);
 };
 
-function showToast(msg){const t=document.getElementById('toast');t.innerText=msg;t.style.opacity='1';t.style.transform='translateX(-50%)';setTimeout(()=>{t.style.opacity='0';},2000);}
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.innerText = msg;
+  t.style.opacity = '1';
+  t.style.transform = 'translateX(-50%) translateY(0)';
+  setTimeout(() => {
+    t.style.opacity = '0';
+    t.style.transform = 'translateX(-50%) translateY(50px)';
+  }, 2000);
+}
 
-function sendToWhatsApp(e){
+function sendToWhatsApp(e) {
   e.preventDefault();
-  const name=document.getElementById('form_name').value.trim();
-  const email=document.getElementById('email').value.trim();
-  const phone=document.getElementById('phone').value.trim();
-  if(!name||!email||!phone){alert('Please fill all required fields.');return;}
-  if(items.length===0){alert('Please add at least one item.');return;}
+  const name = document.getElementById('form_name').value.trim();
+  const email = document.getElementById('email').value.trim();
+  const phone = document.getElementById('phone').value.trim();
 
-  
- const total=items.reduce((s,i)=>s+i.subtotal,0);
-  
+  if (!name || !email || !phone) {
+    alert('Please fill all required fields.');
+    return;
+  }
+  if (items.length === 0) {
+    alert('Please add at least one item.');
+    return;
+  }
+
+  const total = items.reduce((s, i) => s + i.subtotal, 0);
+
   let msgLines = [];
-    msgLines.push(`📦 *New Order from ${name} (Mana Ammamma Ruchulu)*`);
-    msgLines.push(`----------------------------------------`);
-    msgLines.push(`👤 *Name:* ${name}`);
-    msgLines.push(`📧 *Email:* ${email}`);
-    msgLines.push(`📱 *Phone:* ${phone}`);
-    msgLines.push(`----------------------------------------`);
-    msgLines.push(`🍴 *Order Details:*`);
-
-    items.forEach(it=>{
-      msgLines.push(`🟢 *Item:* ${it.product}\n📦 *Qty:* ${it.quantity} gms × ${it.count}\n💰 *Cost:* ${formatRupee(it.subtotal)}`);
-      msgLines.push(`----------------------------------------`);
-    });
-
+  msgLines.push(`📦 *New Order from ${name} (Mana Ammamma Ruchulu)*`);
   msgLines.push(`----------------------------------------`);
+  msgLines.push(`👤 *Name:* ${name}`);
+  msgLines.push(`📧 *Email:* ${email}`);
+  msgLines.push(`📱 *Phone:* ${phone}`);
+  msgLines.push(`----------------------------------------`);
+  msgLines.push(`🍴 *Order Details:*`);
+
+  items.forEach(it => {
+    msgLines.push(`🟢 *Item:* ${it.product}\n📦 *Qty:* ${it.quantity} gms × ${it.count}\n💰 *Cost:* ${formatRupee(it.subtotal)}`);
+    msgLines.push(`----------------------------------------`);
+  });
+
   msgLines.push(`🧾 *Total Amount:* ${formatRupee(total)}`);
   msgLines.push(`🙏 Thank you for ordering from *Mana Ammamma Ruchulu*! ❤️`);
   msgLines.push(`We’ll contact you shortly to confirm delivery.`);
 
-  const whatsappText=encodeURIComponent(msgLines.join(`\n`));
-  const whatsappNumber='919849790312'; // your business number
-  //const whatsappURL=`https://wa.me/${whatsappNumber}?text=${whatsappText}`;
-  //window.open(whatsappURL,'_blank');
-  
-  const details=items.map(i=>`🍴 ${i.product} (${i.quantity}g × ${i.count}) — ${formatRupee(i.subtotal)}`).join('<br>');
+  const whatsappText = encodeURIComponent(msgLines.join(`\n`));
+  const whatsappNumber = '919849790312'; // your business number
+
+  const details = items
+    .map(i => `🍴 ${i.product} (${i.quantity}g × ${i.count}) — ${formatRupee(i.subtotal)}`)
+    .join('<br>');
 
   // Admin mail
-  emailjs.send("service_25u05y5","template_9wy0hii",{
-    to_email:"manaammammaruchulu@gmail.com",
-    name,email,phone,
-    message_html:`<div style="font-family:Arial;background:#fffef8;padding:18px;border:1px solid #f3e5b2;border-radius:10px;"><h2 style="color:#d17d00;">📦 New Order from ${name}</h2><p>📧 ${email}<br>📱 ${phone}</p><hr style="border:1px dashed #f3e5b2;">${details}<h3 style="color:#d17d00;">🧾 Total: ${formatRupee(total)}</h3></div>`
+  emailjs.send("service_25u05y5", "template_9wy0hii", {
+    to_email: "manaammammaruchulu@gmail.com",
+    name, email, phone,
+    message_html: `<div style="font-family:Arial;background:#fffef8;padding:18px;border:1px solid #f3e5b2;border-radius:10px;"><h2 style="color:#d17d00;">📦 New Order from ${name}</h2><p>📧 ${email}<br>📱 ${phone}</p><hr style="border:1px dashed #f3e5b2;">${details}<h3 style="color:#d17d00;">🧾 Total: ${formatRupee(total)}</h3></div>`
   });
 
   // Customer mail
-  emailjs.send("service_25u05y5","template_9wy0hii",{
-    to_email:email,
-    name,email,phone,
-    message_html:`<div style="font-family:Arial;background:#f9fff8;padding:18px;border:1px solid #b7edc2;border-radius:10px;"><h2 style="color:#128C7E;">💚 Thank You, ${name}!</h2><p>Your order from <b>Mana Ammamma Ruchulu</b> has been received successfully.</p>${details}<h3 style="color:#128C7E;">🧾 Total: ${formatRupee(total)}</h3><p>We’ll contact you soon on WhatsApp <b>${phone}</b>.</p></div>`
+  emailjs.send("service_25u05y5", "template_9wy0hii", {
+    to_email: email,
+    name, email, phone,
+    message_html: `<div style="font-family:Arial;background:#f9fff8;padding:18px;border:1px solid #b7edc2;border-radius:10px;"><h2 style="color:#128C7E;">💚 Thank You, ${name}!</h2><p>Your order from <b>Mana Ammamma Ruchulu</b> has been received successfully.</p>${details}<h3 style="color:#128C7E;">🧾 Total: ${formatRupee(total)}</h3><p>We’ll contact you soon on WhatsApp <b>${phone}</b>.</p></div>`
   });
 
-  // WhatsApp message
- // window.open(`https://wa.me/919849790312?text=${encodeURIComponent(msgLines)}`,'_blank');
+  // WhatsApp message open
   window.open(`https://wa.me/${whatsappNumber}?text=${whatsappText}`, '_blank');
 
-  setTimeout(()=>showPopup(name,phone,total),1000);
+  setTimeout(() => showPopup(name, phone, total), 1000);
 }
 
-function showPopup(name,phone,total){
-  const p=document.getElementById('popup');
-  p.innerHTML=`<div class="popup-content" style="background:#fffef8;border:2px solid #f3e5b2;border-radius:15px;padding:30px;text-align:center;"><h3 style="color:#d17d00;">🎉 Thank You, ${name}!</h3><p>Your order has been placed successfully.</p><p>We’ll contact you shortly on WhatsApp <b>${phone}</b>.</p><p><b>Total:</b> ${formatRupee(total)}</p><button onclick="closePopup()">OK</button></div>`;
-  p.style.display='flex';
+function showPopup(name, phone, total) {
+  const p = document.getElementById('popup');
+  p.innerHTML = `
+    <div class="popup-content" style="background:#fffef8;border:2px solid #f3e5b2;border-radius:15px;padding:30px;text-align:center;">
+      <h3 style="color:#d17d00;">🎉 Thank You, ${name}!</h3>
+      <p>Your order has been placed successfully.</p>
+      <p>We’ll contact you shortly on WhatsApp <b>${phone}</b>.</p>
+      <p><b>Total:</b> ${formatRupee(total)}</p>
+      <button onclick="closePopup()">OK</button>
+    </div>`;
+  p.style.display = 'flex';
 }
-function closePopup(){
-  const p=document.getElementById('popup');
-  p.style.display='none';
+
+function closePopup() {
+  const p = document.getElementById('popup');
+  p.style.display = 'none';
   document.getElementById('order-form').reset();
-  items=[];renderItems();
+  items = [];
+  renderItems();
 }
 </script>
 
 <style>
-
 /* --- BUTTON DESIGN --- */
 .whatsapp-btn {
   background: linear-gradient(90deg, #25D366, #128C7E);
@@ -1463,15 +1633,26 @@ function closePopup(){
 }
 
 .popup-overlay {
-  display:none;position:fixed;top:0;left:0;width:100%;height:100%;
-  background:rgba(0,0,0,0.5);justify-content:center;align-items:center;z-index:9999;
+  display:none;
+  position:fixed;
+  top:0;left:0;
+  width:100%;height:100%;
+  background:rgba(0,0,0,0.5);
+  justify-content:center;
+  align-items:center;
+  z-index:9999;
 }
+
 .popup-content button {
-  background:#25D366;color:white;border:none;padding:10px 25px;
-  border-radius:25px;cursor:pointer;font-weight:bold;
+  background:#25D366;
+  color:white;
+  border:none;
+  padding:10px 25px;
+  border-radius:25px;
+  cursor:pointer;
+  font-weight:bold;
 }
 </style>
-
 
 
     <!-- end reservations-main -->
